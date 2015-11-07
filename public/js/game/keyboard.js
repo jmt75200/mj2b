@@ -61,7 +61,7 @@ Keys.init = function init(keyCodes) {
       var laneCopy = lane; // Closure and var are necessary
 
       keyHandler[laneCopy].press = function() {
-        PlayerOne.heroes[laneCopy].position.y -= 10;
+        PlayerOne.heroes[laneCopy].position.x += 10;
       };
     };
 

@@ -4,15 +4,22 @@ Game = {
 
 Game.SETTINGS = {
   backgroundColor: 0x1099bb,
-  canvasWidth: 800,
-  canvasHeight: 600,
+  canvasWidth: 1100,
+  canvasHeight: 700,
   numLanes: 5,
   numZonesPerLane: 8,
   playerOneZoneColor: 0xEDEFF5,
-  playerTwoZoneColor: 0x4A565D
+  playerTwoZoneColor: 0x4A565D,
+  botMode: true,
 };
 
-Game.renderer = PIXI.autoDetectRenderer(Game.SETTINGS.canvasWidth, Game.SETTINGS.canvasHeight,{
+Game.VIEWPORT = {
+  sizePerStep: 1,
+}
+
+Game.STATE = new GameState();
+
+Game.renderer = PIXI.autoDetectRenderer(Game.SETTINGS.canvasWidth, Game.SETTINGS.canvasWidth,{
   backgroundColor: Game.SETTINGS.backgroundColor
 });
 
@@ -20,14 +27,20 @@ Game.init = function init(numLanes) {
   document.body.appendChild(Game.renderer.view);
 
   var numLanes = numLanes || Game.SETTINGS.numLanes;
-  var laneWidth = Game.SETTINGS.canvasWidth / numLanes;
+  var laneWidth = Game.SETTINGS.canvasHeight / numLanes;
 
   var graphics = new PIXI.Graphics();
   var zone1 = Game.SETTINGS.playerOneZoneColor;
   var zone2 = Game.SETTINGS.playerTwoZoneColor;
-  var zoneHeight = Game.SETTINGS.canvasHeight / Game.SETTINGS.numZonesPerLane;
+  var zoneHeight = Game.SETTINGS.canvasWidth / Game.SETTINGS.numZonesPerLane;
   var zoneColor = null;
   var zoneTemp = null;
+
+  var numSteps = 80;
+  var verticalOffset = 0;
+  Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
+
+  Game.SETTINGS.cpuDifficulty = 1;
 
   for (var i = 0; i < numLanes; i++) {
     for (var k = 0; k < Game.SETTINGS.numZonesPerLane; k++) {
@@ -38,7 +51,7 @@ Game.init = function init(numLanes) {
       }
 
       graphics.beginFill(zoneColor);
-      graphics.drawRect(i * laneWidth, k * zoneHeight, laneWidth, zoneHeight);
+      graphics.drawRect( k * zoneHeight, i * laneWidth, zoneHeight, laneWidth);
     }
 
     zoneTemp = zone1;
@@ -48,8 +61,8 @@ Game.init = function init(numLanes) {
 
   Game.stage.addChild(graphics);
 
-  var xStartingPos = 0;
-  var yStartingPos = Game.SETTINGS.canvasHeight / 2;
+  var xStartingPos = Game.SETTINGS.canvasWidth / 2;
+  var yStartingPos = 0;
 
   for (var i = 0; i < numLanes; i++) {
     var lane = new PIXI.Container();
@@ -58,7 +71,7 @@ Game.init = function init(numLanes) {
     hero.anchor.set(0.5, 0.5);
     hero.scale.set(0.3, 0.3);
 
-    xStartingPos = (laneWidth / 2) + (i * laneWidth);
+    yStartingPos = (laneWidth / 2) + (i * laneWidth);
 
     hero.position.set(xStartingPos, yStartingPos);
     lane.addChild(hero);
@@ -76,10 +89,13 @@ Game.loop = function loop() {
   requestAnimationFrame(Game.loop);
 
   PlayerOne.heroes.forEach(function(hero) {
-    hero.position.y += 1;
+    hero.position.x -= (Game.SETTINGS.cpuDifficulty/60 * Game.VIEWPORT.sizePerStep);
 
-    if (hero.position.y === Game.SETTINGS.canvasHeight) {
-      hero.position.y = 0;
+    if (hero.position.x >= Game.SETTINGS.canvasWidth) {
+      hero.position.x = Game.SETTINGS.canvasWidth;
+    }
+    if (hero.position.x < 0) {
+      hero.position.x = 0;
     }
   });
 
