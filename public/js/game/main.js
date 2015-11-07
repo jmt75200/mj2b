@@ -39,13 +39,15 @@ Game.init = function(numLanes) {
 
     Game.stage.addChild(lane);
   }
+
+  setupKeyboard();
 };
 
 Game.loop = function() {
   requestAnimationFrame(Game.loop);
 
   PlayerOne.heroes.forEach(function(hero) {
-    hero.position.y += 1;
+    // hero.position.y += 1;
 
     if (hero.position.y === Game.SETTINGS.canvasHeight) {
       hero.position.y = 0;
