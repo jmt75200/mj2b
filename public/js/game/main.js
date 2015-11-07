@@ -11,6 +11,7 @@ Game.SETTINGS = {
   playerOneZoneColor: 0xEDEFF5,
   playerTwoZoneColor: 0x4A565D,
   botMode: true,
+  laneScoring: [-10, 1, -6, 3, -3, 6, -1, 10],
 };
 
 Game.VIEWPORT = {
@@ -38,6 +39,7 @@ Game.init = function init(numLanes) {
 
   var numSteps = 80;
   var verticalOffset = 0;
+  Game.VIEWPORT.zoneHeight = zoneHeight;
   Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
 
   Game.SETTINGS.cpuDifficulty = 1;
@@ -88,7 +90,7 @@ Game.init = function init(numLanes) {
 Game.loop = function loop() {
   requestAnimationFrame(Game.loop);
 
-  PlayerOne.heroes.forEach(function(hero) {
+  PlayerOne.heroes.forEach(function(hero, i) {
     hero.position.x -= (Game.SETTINGS.cpuDifficulty/60 * Game.VIEWPORT.sizePerStep);
 
     if (hero.position.x >= Game.SETTINGS.canvasWidth) {
@@ -97,7 +99,22 @@ Game.loop = function loop() {
     if (hero.position.x < 0) {
       hero.position.x = 0;
     }
+
+    // score the current lane
+    var zone = Math.floor(hero.position.x / Game.VIEWPORT.zoneHeight);
+    if (Game.SETTINGS.laneScoring[zone] > 0) {
+      Game.STATE.score[0] += Game.SETTINGS.laneScoring[zone]/60.0
+    }
+    else {
+      Game.STATE.score[1] -= Game.SETTINGS.laneScoring[zone]/60.0
+    }
+
+    Game.STATE.lanes[i] = hero.position.x
   });
+
+  document.getElementById("p1score").innerHTML = Game.STATE.score[0];
+  document.getElementById("p2score").innerHTML = Game.STATE.score[1];
+
 
   Game.renderer.render(Game.stage);
 };
