@@ -1,0 +1,4 @@
+PlayerOne = {
+  lanes: [],
+  heroes: []
+};

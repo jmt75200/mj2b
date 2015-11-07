@@ -1,62 +1,59 @@
-var renderer = PIXI.autoDetectRenderer(900, 600,{backgroundColor : 0x1099bb});
-document.body.appendChild(renderer.view);
+Game = {
+  stage: new PIXI.Container()
+};
 
-// create the root of the scene graph
-var stage = new PIXI.Container();
+Game.SETTINGS = {
+  backgroundColor: 0x1099bb,
+  canvasWidth: 800,
+  canvasHeight: 600,
+  numLanes: 5
+};
 
-var lane1 = new PIXI.Container();
-var lane2 = new PIXI.Container();
-var lane3 = new PIXI.Container();
+Game.renderer = PIXI.autoDetectRenderer(Game.SETTINGS.canvasWidth, Game.SETTINGS.canvasHeight,{
+  backgroundColor: Game.SETTINGS.backgroundColor
+});
 
-// create a texture from an image path
-var hero1 = PIXI.Sprite.fromImage('assets/heroes/bunny.png');
-var hero2 = PIXI.Sprite.fromImage('assets/heroes/bunny.png');
-var hero3 = PIXI.Sprite.fromImage('assets/heroes/bunny.png');
+Game.init = function(numLanes) {
+  document.body.appendChild(Game.renderer.view);
 
-// center the sprite's anchor point
-hero1.anchor.x = 0.5;
-hero1.anchor.y = 0.5;
-hero2.anchor.x = 0.5;
-hero2.anchor.y = 0.5;
-hero3.anchor.x = 0.5;
-hero3.anchor.y = 0.5;
+  var numLanes = numLanes || Game.SETTINGS.numLanes;
 
-// move the sprite to the center of the screen
-hero1.position.x = 150;
-hero1.position.y = 300;
-lane1.addChild(hero1);
+  var xStartingPos = 0;
+  var yStartingPos = Game.SETTINGS.canvasHeight / 2;
+  var laneWidth = Game.SETTINGS.canvasWidth / numLanes;
 
-hero2.position.x = 450;
-hero2.position.y = 300;
-lane2.addChild(hero2);
+  for (var i = 0; i < numLanes; i++) {
+    var lane = new PIXI.Container();
 
-hero3.position.x = 750;
-hero3.position.y = 300;
-lane3.addChild(hero3);
+    var hero = PIXI.Sprite.fromImage('assets/heroes/bunny.png');
+    hero.anchor.set(0.5, 0.5);
+    hero.scale.set(0.3, 0.3);
 
-stage.addChild(lane1);
-stage.addChild(lane2);
-stage.addChild(lane3);
+    xStartingPos = (laneWidth / 2) + (i * laneWidth);
 
-// start animating
-animate();
-function animate() {
-  requestAnimationFrame(animate);
+    hero.position.set(xStartingPos, yStartingPos);
+    lane.addChild(hero);
 
-  hero1.position.y += 1;
-  hero2.position.y += 1;
-  hero3.position.y += 1;
+    PlayerOne.heroes.push(hero);
+    PlayerOne.lanes.push(lane);
 
-  if (hero1.position.y === 600) {
-    hero1.position.y = 0;
+    Game.stage.addChild(lane);
   }
-  if (hero2.position.y === 600) {
-    hero2.position.y = 0;
-  }
-  if (hero3.position.y === 600) {
-    hero3.position.y = 0;
-  }
+};
 
-  // render the container
-  renderer.render(stage);
-}
+Game.loop = function() {
+  requestAnimationFrame(Game.loop);
+
+  PlayerOne.heroes.forEach(function(hero) {
+    hero.position.y += 1;
+
+    if (hero.position.y === Game.SETTINGS.canvasHeight) {
+      hero.position.y = 0;
+    }
+  });
+
+  Game.renderer.render(Game.stage);
+};
+
+Game.init();
+Game.loop();
