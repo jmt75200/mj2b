@@ -13,7 +13,7 @@ Game.renderer = PIXI.autoDetectRenderer(Game.SETTINGS.canvasWidth, Game.SETTINGS
   backgroundColor: Game.SETTINGS.backgroundColor
 });
 
-Game.init = function(numLanes) {
+Game.init = function init(numLanes) {
   document.body.appendChild(Game.renderer.view);
 
   var numLanes = numLanes || Game.SETTINGS.numLanes;
@@ -40,14 +40,14 @@ Game.init = function(numLanes) {
     Game.stage.addChild(lane);
   }
 
-  setupKeyboard();
+  Keys.init();
 };
 
-Game.loop = function() {
+Game.loop = function loop() {
   requestAnimationFrame(Game.loop);
 
   PlayerOne.heroes.forEach(function(hero) {
-    // hero.position.y += 1;
+    hero.position.y += 1;
 
     if (hero.position.y === Game.SETTINGS.canvasHeight) {
       hero.position.y = 0;

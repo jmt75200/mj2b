@@ -1,54 +1,70 @@
-function keyboard(keyCode) {
+Keys = {};
+
+Keys.SETTINGS = {
+  lane1: 65, // a
+  lane2: 83, // s
+  lane3: 68, // d
+  lane4: 70, // f
+  lane5: 74, // j
+  lane6: 75, // k
+  lane7: 76, // l
+  lane8: 186 // ;
+};
+
+Keys.keyboard = function keyboard(keyCode) {
   var key = {};
   key.code = keyCode;
   key.isDown = false;
   key.isUp = true;
   key.press = undefined;
   key.release = undefined;
-  //The `downHandler`
-  key.downHandler = function(event) {
-    if (event.keyCode === key.code) {
+
+  key.downHandler = function(evt) {
+    if (evt.keyCode === key.code) {
       if (key.isUp && key.press) key.press();
       key.isDown = true;
       key.isUp = false;
     }
-    event.preventDefault();
+    evt.preventDefault();
   };
 
-  //The `upHandler`
-  key.upHandler = function(event) {
-    if (event.keyCode === key.code) {
+  key.upHandler = function(evt) {
+    if (evt.keyCode === key.code) {
       if (key.isDown && key.release) key.release();
       key.isDown = false;
       key.isUp = true;
     }
-    event.preventDefault();
+    evt.preventDefault();
   };
 
-  //Attach event listeners
-  window.addEventListener(
-    "keydown", key.downHandler.bind(key), false
-  );
-  window.addEventListener(
-    "keyup", key.upHandler.bind(key), false
-  );
-  return key;
-}
+  window.addEventListener('keydown', key.downHandler.bind(key), false);
+  window.addEventListener('keyup', key.upHandler.bind(key), false);
 
-function setupKeyboard() {
-  var keys = [97, 115, 100, 102, 103];
+  return key;
+};
+
+Keys.init = function init(keyCodes) {
+  var keys = keyCodes || [
+    Keys.SETTINGS.lane1,
+    Keys.SETTINGS.lane2,
+    Keys.SETTINGS.lane3,
+    Keys.SETTINGS.lane4,
+    Keys.SETTINGS.lane5,
+  ];
 
   var keyHandler = [];
 
-  for(i=0; i < keys.length; i++) {
-    keyHandler[i] = keyboard(keys[i]);
+  for (var lane = 0; lane < keys.length; lane++) {
+    keyHandler[lane] = Keys.keyboard(keys[lane]);
 
-    keyHandler[i].press = function() {
-      console.log("PRESSED " + i)
-      PlayerOne.heroes[i].y -= 10;
+    var moveHero = function() {
+      var laneCopy = lane; // Closure and var are necessary
+
+      keyHandler[laneCopy].press = function() {
+        PlayerOne.heroes[laneCopy].position.y -= 10;
+      };
     };
 
-    console.log(keyHandler);
+    moveHero();
   }
-
-}
+};
