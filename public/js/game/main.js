@@ -1,5 +1,6 @@
 Game = {
-  stage: new PIXI.Container()
+  stage: new PIXI.Container(),
+  zones: {}
 };
 
 Game.SETTINGS = {
@@ -30,7 +31,6 @@ Game.init = function init(numLanes) {
   var numLanes = numLanes || Game.SETTINGS.numLanes;
   var laneWidth = Game.SETTINGS.canvasHeight / numLanes;
 
-  var graphics = new PIXI.Graphics();
   var zone1 = Game.SETTINGS.playerOneZoneColor;
   var zone2 = Game.SETTINGS.playerTwoZoneColor;
   var zoneHeight = Game.SETTINGS.canvasWidth / Game.SETTINGS.numZonesPerLane;
@@ -52,16 +52,18 @@ Game.init = function init(numLanes) {
         zoneColor = zone2;
       }
 
-      graphics.beginFill(zoneColor);
-      graphics.drawRect( k * zoneHeight, i * laneWidth, zoneHeight, laneWidth);
+      var zone = new PIXI.Graphics();
+      zone.beginFill(zoneColor);
+      zone.drawRect(k * zoneHeight, i * laneWidth, zoneHeight, laneWidth);
+
+      Game.zones['l' + i + 'z' + k] = zone; // "lane 0 zone 0"
+      Game.stage.addChild(zone);
     }
 
     zoneTemp = zone1;
     zone1 = zone2;
     zone2 = zoneTemp;
   }
-
-  Game.stage.addChild(graphics);
 
   var xStartingPos = Game.SETTINGS.canvasWidth / 2;
   var yStartingPos = 0;
