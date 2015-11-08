@@ -21,15 +21,16 @@ socket.on('update offsets', function(msg) {
   var offsets = msg.split(",");
   for(var i=0; i<offsets.length; i++) { offsets[i] = +offsets[i]; } 
 
-  // console.log('converted: ' + myArray);
+  console.log('converted: ' + offsets);
 
-  console.log(Game.SETTINGS.numLanes);
+   console.log(Game.SETTINGS.numLanes);
 
   for(i=0; i < Game.SETTINGS.numLanes; i++) {
     // convert offsets to positions and update heroes on screen
-//    console.log(Game.VIEWPORT.sizePerStep)
-    console.log(PlayerOne.heroes[i].x +'   '+ (40 + offsets[i]) * Game.VIEWPORT.sizePerStep )
-    PlayerOne.heroes[i].x = (40 + offsets[i]) * Game.VIEWPORT.sizePerStep;
+    // console.log(PlayerOne.heroes[i].x +'   '+ (40 + offsets[i]) * Game.VIEWPORT.sizePerStep )
+    //PlayerOne.heroes[laneCopy].sprite.position.x
+
+    PlayerOne.heroes[i].sprite.position.x = (40 + offsets[i]) * Game.VIEWPORT.sizePerStep;
   }
 
 });

@@ -120,7 +120,7 @@ Game.loop = function loop() {
 
         hero.currentZoneTimeLastPolled = now; // reset zone entered time
 
-        console.log('Hero ' + i + ' gained ' + Game.SETTINGS.playerOneLaneScores[zone] + ' points in zone ' + zone + ', hero score: ' + hero.score + '; total score: ' + PlayerOne.totalScore);
+        // console.log('Hero ' + i + ' gained ' + Game.SETTINGS.playerOneLaneScores[zone] + ' points in zone ' + zone + ', hero score: ' + hero.score + '; total score: ' + PlayerOne.totalScore);
       }
 
       // currentZone and previousZone values remain the same
