@@ -136,14 +136,17 @@ input[type=submit]{
 }
 
 .info{   
-  margin-bottom: 30px;
+  margin-bottom: 60px;
   font-size: 20px;
 }
 
+.info p {
+  margin-bottom: 10px;
+}
 
 .buttons{
   width: 300px;
-  margin: 0 auto 50px;
+  margin: 20px auto 50px;
 }
 
 .content_container ol li{
