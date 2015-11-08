@@ -61,7 +61,7 @@ Keys.init = function init(keyCodes) {
       var laneCopy = lane; // Closure and var are necessary
 
       keyHandler[laneCopy].press = function() {
-        PlayerOne.heroes[laneCopy].position.x += Game.STATE.team * Game.VIEWPORT.sizePerStep;
+        PlayerOne.heroes[laneCopy].sprite.position.x += Game.STATE.team * Game.VIEWPORT.sizePerStep;
         Game.STATE.deltas[laneCopy] += 1;
       };
     };

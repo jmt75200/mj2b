@@ -12,7 +12,9 @@ Game.SETTINGS = {
   playerOneZoneColor: 0xEDEFF5,
   playerTwoZoneColor: 0x4A565D,
   botMode: true,
-  laneScoring: [-10, 1, -6, 3, -3, 6, -1, 10],
+  // scores for each zone, index 0 to 7
+  playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
+  playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
 };
 
 Game.VIEWPORT = {
@@ -29,17 +31,17 @@ Game.init = function init(numLanes) {
   document.body.appendChild(Game.renderer.view);
 
   var numLanes = numLanes || Game.SETTINGS.numLanes;
-  var laneWidth = Game.SETTINGS.canvasHeight / numLanes;
+  var laneHeight = Game.SETTINGS.canvasHeight / numLanes;
 
   var zone1 = Game.SETTINGS.playerOneZoneColor;
   var zone2 = Game.SETTINGS.playerTwoZoneColor;
-  var zoneHeight = Game.SETTINGS.canvasWidth / Game.SETTINGS.numZonesPerLane;
+  var zoneWidth = Game.SETTINGS.canvasWidth / Game.SETTINGS.numZonesPerLane;
   var zoneColor = null;
   var zoneTemp = null;
 
   var numSteps = 80;
   var verticalOffset = 0;
-  Game.VIEWPORT.zoneHeight = zoneHeight;
+  Game.VIEWPORT.zoneWidth = zoneWidth;
   Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
 
   Game.SETTINGS.cpuDifficulty = 0;
@@ -54,7 +56,7 @@ Game.init = function init(numLanes) {
 
       var zone = new PIXI.Graphics();
       zone.beginFill(zoneColor);
-      zone.drawRect(k * zoneHeight, i * laneWidth, zoneHeight, laneWidth);
+      zone.drawRect(k * zoneWidth, i * laneHeight, zoneWidth, laneHeight);
 
       Game.zones['l' + i + 'z' + k] = zone; // "lane 0 zone 0"
       Game.stage.addChild(zone);
@@ -75,12 +77,12 @@ Game.init = function init(numLanes) {
     hero.anchor.set(0.5, 0.5);
     hero.scale.set(0.3, 0.3);
 
-    yStartingPos = (laneWidth / 2) + (i * laneWidth);
+    yStartingPos = (laneHeight / 2) + (i * laneHeight);
 
     hero.position.set(xStartingPos, yStartingPos);
     lane.addChild(hero);
 
-    PlayerOne.heroes.push(hero);
+    PlayerOne.heroes.push(new Hero(hero));
     PlayerOne.lanes.push(lane);
 
     Game.stage.addChild(lane);
@@ -95,25 +97,39 @@ Game.loop = function loop() {
   requestAnimationFrame(Game.loop);
 
   PlayerOne.heroes.forEach(function(hero, i) {
-    hero.position.x -= (Game.SETTINGS.cpuDifficulty/60 * Game.VIEWPORT.sizePerStep);
+    hero.sprite.position.x -= (Game.SETTINGS.cpuDifficulty/60 * Game.VIEWPORT.sizePerStep);
 
-    if (hero.position.x >= Game.SETTINGS.canvasWidth) {
-      hero.position.x = Game.SETTINGS.canvasWidth;
+    if (hero.sprite.position.x >= Game.SETTINGS.canvasWidth) {
+      hero.sprite.position.x = Game.SETTINGS.canvasWidth;
     }
-    if (hero.position.x < 0) {
-      hero.position.x = 0;
+    if (hero.sprite.position.x < 0) {
+      hero.sprite.position.x = 0;
     }
 
     // score the current lane
-    var zone = Math.floor(hero.position.x / Game.VIEWPORT.zoneHeight);
-    if (Game.SETTINGS.laneScoring[zone] > 0) {
-      Game.STATE.score[0] += Game.SETTINGS.laneScoring[zone]/60.0
-    }
-    else {
-      Game.STATE.score[1] -= Game.SETTINGS.laneScoring[zone]/60.0
-    }
+    var zone = Math.floor(hero.sprite.position.x / Game.VIEWPORT.zoneWidth);
+    var now = Date.now();
 
-//    Game.STATE.lanes[i] = hero.position.x
+    // on the next frame, if hero is still in the same zone, check the time spent in the zone
+    if (hero.currentZone === zone && hero.currentZone === hero.previousZone) {
+      var timeSpentInZone = now - hero.currentZoneTimeLastPolled;
+
+      if (timeSpentInZone >= 3000) { // 3000 ms = 3 s
+        hero.score += Game.SETTINGS.playerOneLaneScores[zone];
+        PlayerOne.totalScore += Game.SETTINGS.playerOneLaneScores[zone];
+
+        hero.currentZoneTimeLastPolled = now; // reset zone entered time
+
+        console.log('Hero ' + i + ' gained ' + Game.SETTINGS.playerOneLaneScores[zone] + ' points in zone ' + zone + ', hero score: ' + hero.score + '; total score: ' + PlayerOne.totalScore);
+      }
+
+      // currentZone and previousZone values remain the same
+    } else {
+      // hero has left the zone, so reset all values
+      hero.previousZone = hero.currentZone;
+      hero.currentZone = zone;
+      hero.currentZoneTimeLastPolled = now;
+    }
   });
 
   // document.getElementById("p1score").innerHTML = Game.STATE.score[0];
@@ -123,7 +139,6 @@ Game.loop = function loop() {
     socket.emit('update state', JSON.stringify(Game.STATE) );
     Game.STATE.deltas = [0,0,0,0,0,0,0,0];
   }
-
 
   Game.renderer.render(Game.stage);
 };
