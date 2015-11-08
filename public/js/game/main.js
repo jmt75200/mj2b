@@ -16,6 +16,17 @@ var player_styles = {
   dropShadowAngle: 0,
   fill: '#666'
 };
+var key_styles = {
+  font: 'bold 30px Arial',
+  align: 'left',
+  stroke: '#FFFFFF',
+  strokeThickness: 3,
+  dropShadow: true,
+  dropShadowColor: '#eee',
+  dropShadowAngle: 0,
+  fill: '#222',
+  alpha: 0.5
+};
 
 Game = {
   stage: new PIXI.Container(),
@@ -26,6 +37,11 @@ Game = {
   gameOverTxt: new PIXI.Text('', header_styles),
   player1Txt: new PIXI.Text('DARK PLAYER', player_styles),
   player2Txt: new PIXI.Text('LIGHT PLAYER', player_styles),
+  keyS: new PIXI.Text('S', key_styles),
+  keyD: new PIXI.Text('D', key_styles),
+  keyF: new PIXI.Text('F', key_styles),
+  keyJ: new PIXI.Text('J', key_styles),
+  keyK: new PIXI.Text('K', key_styles),
   loopCounter: 0
 };
 
@@ -109,6 +125,17 @@ Game.init = function init(numLanes) {
   Game.stage.addChild(Game.gameOverTxt);
   Game.gameOverTxt.position.set(Game.SETTINGS.canvasWidth/2, Game.SETTINGS.canvasHeight/2);
   Game.gameOverTxt.anchor.set(0.5, 0);
+
+  Game.stage.addChild(Game.keyS);
+  Game.keyS.position.set(50,110);
+  Game.stage.addChild(Game.keyD);
+  Game.keyD.position.set(50,280);
+  Game.stage.addChild(Game.keyF);
+  Game.keyF.position.set(50,440);
+  Game.stage.addChild(Game.keyJ);
+  Game.keyJ.position.set(50,600);
+  Game.stage.addChild(Game.keyK);
+  Game.keyK.position.set(50,780);
 
 
   for (var i = 0; i < numLanes; i++) {
