@@ -4,15 +4,17 @@
 }
 
 body {
+  font-family: 'Lato', sans-serif;
   text-align: center;
   overflow: hidden;
   background: #F5F7F9;
 }
 
 h2 {
-  font-family: "Merriweather", "Roboto", sans-serif;
+  font-family: 'Roboto Slab', serif;
   margin-top: 15px;
 }
+
 h2 img {
   width: 50px;
   height: 50px;
@@ -26,4 +28,26 @@ h2 img {
   left: 0;
   right: 0;
   margin: auto;
+}
+
+/* buttons */
+a{
+  text-decoration: none;
+}
+
+nav ul{
+  display: block;
+}
+
+nav ul li{
+  padding: 20px 50px;
+  margin: 20px 0;
+}
+
+.button{
+  padding: 20px 70px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: red;
+  box-shadow: 0 6px teal;
 }
