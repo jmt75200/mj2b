@@ -2,9 +2,17 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var bodyParser = require('body-parser');
+var session = require('express-session');
 
 app.use(express.static('./public'));
 app.set('view engine', 'jade');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'this is not a secret',
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.get('/', function(req, res) {
   res.render('index');
@@ -21,6 +29,30 @@ app.get('/host', function(req, res) {
 app.get('/join', function(req, res) {
   res.render('join');
 });
+
+app.get('/lobby/:code', function(req, res) {
+  res.render('lobby', {
+    code: req.params.code,
+    playerName: req.session.playerName
+  });
+});
+
+app.post('/games', function(req, res) {
+  req.session.playerName = req.body.playerName;
+  res.redirect('/lobby/' + generateAccessCode());
+});
+
+// Credit goes to Spyfall: https://github.com/evanbrumley/spyfall
+function generateAccessCode() {
+  var code = '';
+  var possible = 'abcdefghijklmnopqrstuvwxyz';
+
+  for (var i = 0; i < 6; i++) {
+    code += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return code;
+}
 
 var port = 3000;
 app.listen(port);

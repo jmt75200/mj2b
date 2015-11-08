@@ -1,1 +1,9 @@
-p host
+extends ./layout
+
+block content
+  form(method="post", action="/games")
+    input(type="text", name="playerName", placeholder="Enter a name", required)
+    br
+    input(type="submit", value="Host", class="button radius tiny")
+    br
+    a(href="/", class="button radius tiny") Back
