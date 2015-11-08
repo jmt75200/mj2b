@@ -157,7 +157,7 @@ Game.loop = function loop() {
       break;
       case 2: winner = 'PLAYER 2 WINS';
       break;
-      default: winner = 'IT\'S A TIE';
+      default: winner = 'PLAY A NEW GAME';
     }
 
     Game.timerTxt.text = winner;

@@ -97,13 +97,13 @@ io.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function() {
-    console.log('user', socket.playerName, 'disconnected from room', socket.room)
+    console.log('user', socket.playerName, 'disconnected from room', socket.room);
     socket.leave(socket.room);
   });
 
   socket.on('update state', function(msg, room, playerName) {
     // console.log('update state', room, playerName);
-    // console.log('update state', socket.room, room, socket.room === room)
+    console.log('update state', socket.room, room, socket.room === room);
 
     // if (socket.room === room) { // does not work as intended
       data = JSON.parse(msg);
