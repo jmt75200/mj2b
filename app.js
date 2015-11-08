@@ -23,7 +23,7 @@ var offsets = [0,0,0,0,0,0,0,0];
 io.on('connection', function(socket){
   console.log('a user connected.  count: ' + (clientCount++));
 
-  socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  )
+  socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  );
 
   socket.on('disconnect', function(){
     console.log('user disconnected');

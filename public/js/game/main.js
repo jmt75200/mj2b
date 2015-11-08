@@ -19,8 +19,10 @@ Game.SETTINGS = {
   improveStaminaCounter: 60, // decrease stamina once per second
   improveStaminaAmount: 10, // decrease stamina by 10
   // scores for each zone, index 0 to 7
-  playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
-  playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
+  playerOneLaneScores: [0, 1, 0, 3, 0, 6, 0, 10], // moving right
+  playerTwoLaneScores: [10, 0, 6, 0, 3, 0, 1, 0] // moving left
+  // playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
+  // playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
 };
 
 Game.VIEWPORT = {
@@ -29,7 +31,7 @@ Game.VIEWPORT = {
 
 Game.STATE = new GameState();
 
-Game.renderer = PIXI.autoDetectRenderer(Game.SETTINGS.canvasWidth, Game.SETTINGS.canvasWidth,{
+Game.renderer = PIXI.autoDetectRenderer(Game.SETTINGS.canvasWidth, Game.SETTINGS.canvasHeight,{
   backgroundColor: Game.SETTINGS.backgroundColor
 });
 
@@ -54,14 +56,14 @@ Game.init = function init(numLanes) {
 
   var mountain = PIXI.Sprite.fromImage("assets/background.png");
   mountain.anchor.set(0,0);
-  mountain.position.set(0,-50);
+  mountain.position.set(0,-80);
   Game.stage.addChild(mountain);
 
   Game.stage.addChild(Game.scoreA);
   Game.scoreA.position.set(50, 50);
   Game.scoreA.anchor.set(0, 0.5);
   Game.stage.addChild(Game.scoreB);
-  Game.scoreB.position.set(Game.SETTINGS.canvasWidth - 50, 50);
+  Game.scoreB.position.set(Game.SETTINGS.canvasWidth, 50);
   Game.scoreB.anchor.set(1, 0.5);
 
 
@@ -73,12 +75,11 @@ Game.init = function init(numLanes) {
         zoneColor = zone2;
       }
 
-      // var zone = new PIXI.Graphics();
-      // zone.beginFill(zoneColor);
-      // zone.drawRect(k * zoneWidth, i * laneHeight, zoneWidth, laneHeight);
-
-      // Game.zones['l' + i + 'z' + k] = zone; // "lane 0 zone 0"
-      // Game.stage.addChild(zone);
+      var zone = new PIXI.Graphics();
+      zone.beginFill(zoneColor,0.1);
+      zone.drawRect(k * zoneWidth, i * laneHeight, zoneWidth, laneHeight);
+      Game.zones['l' + i + 'z' + k] = zone; // "lane 0 zone 0"
+      Game.stage.addChild(zone);
     }
 
     zoneTemp = zone1;
@@ -92,11 +93,25 @@ Game.init = function init(numLanes) {
   for (var i = 0; i < numLanes; i++) {
     var lane = new PIXI.Container();
 
+    var heroImage;
+    switch( i ){
+      case 0: heroImage = 'assets/heroes/gunner.png';
+      break;
+      case 1: heroImage = 'assets/heroes/test.png';
+      break;
+      case 2: heroImage = 'assets/heroes/wizzard.png';
+      break;
+      case 3: heroImage = 'assets/heroes/swordsmen.png';
+      break;
+      case 4: heroImage = 'assets/heroes/gunner.png';
+      break;
+      default: heroImage = 'assets/heroes/bunny.png';
+    }
 
-    var hero = PIXI.Sprite.fromImage('assets/heroes/bunny.png');
-    hero.anchor.set(0.5, 0.5);
-    hero.scale.set(0.3, 0.3);
-
+    var hero = PIXI.Sprite.fromImage( heroImage );
+    hero.lock = false; // LANE LOCK VARIABLE
+    hero.anchor.set(0.5, 0.35);
+    hero.scale.set(0.9, 0.9);
     yStartingPos = (laneHeight / 2) + (i * laneHeight);
 
     hero.position.set(xStartingPos, yStartingPos);
@@ -134,6 +149,8 @@ Game.loop = function loop() {
       hero.sprite.position.x = 0;
     }
 
+    freezeLane(hero);
+
     // score the current lane
     var zone = Math.floor(hero.sprite.position.x / Game.VIEWPORT.zoneWidth);
     var now = Date.now();
@@ -143,12 +160,20 @@ Game.loop = function loop() {
       var timeSpentInZone = now - hero.currentZoneTimeLastPolled;
 
       if (timeSpentInZone >= 3000) { // 3000 ms = 3 s
-        hero.score += Game.SETTINGS.playerOneLaneScores[zone];
-        PlayerOne.totalScore += Game.SETTINGS.playerOneLaneScores[zone];
+        // hero.score += Game.SETTINGS.playerOneLaneScores[zone];
+        if( isNaN((Game.SETTINGS.playerOneLaneScores[zone])) ){
+          Game.SETTINGS.playerOneLaneScores[zone] = 0;
+        }
+        if( isNaN((Game.SETTINGS.playerTwoLaneScores[zone])) ){
+          Game.SETTINGS.playerTwoLaneScores[zone] = 0;
+        }
+        PlayerOne.totalScoreA += Game.SETTINGS.playerOneLaneScores[zone];
+        PlayerOne.totalScoreB += Game.SETTINGS.playerTwoLaneScores[zone];
 
         hero.currentZoneTimeLastPolled = now; // reset zone entered time
 
-        // console.log('Hero ' + i + ' gained ' + Game.SETTINGS.playerOneLaneScores[zone] + ' points in zone ' + zone + ', hero score: ' + hero.score + '; total score: ' + PlayerOne.totalScore);
+        // console.log('A Hero ' + i + ' gained ' + Game.SETTINGS.playerOneLaneScores[zone] + ' points in zone ' + zone + ', hero score: ' + hero.score + '; total score: ' + PlayerOne.totalScoreA);
+        // console.log('B Hero ' + i + ' gained ' + Game.SETTINGS.playerTwoLaneScores[zone] + ' points in zone ' + zone + ', hero score: ' + hero.score + '; total score: ' + PlayerOne.totalScoreB);
       }
 
       // currentZone and previousZone values remain the same
@@ -163,7 +188,8 @@ Game.loop = function loop() {
   // document.getElementById("p1score").innerHTML = Game.STATE.score[0];
   // document.getElementById("p2score").innerHTML = Game.STATE.score[1];
 
-  Game.scoreA.text = PlayerOne.totalScore.toString();
+  Game.scoreA.text = PlayerOne.totalScoreA.toString();
+  Game.scoreB.text = PlayerOne.totalScoreB.toString();
   // Game.scoreB.text = Game.STATE.score[1];
 
 
@@ -181,3 +207,12 @@ Game.loop = function loop() {
 
 Game.init();
 Game.loop();
+
+function freezeLane( hero ){
+  if ( hero.sprite.position.x >= (Game.SETTINGS.canvasWidth-50) ){
+    hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
+    console.log('YOU HIT THE END');
+  } else {
+    console.log('STILL OK');
+  }
+}
