@@ -20,6 +20,67 @@ app.get('/', function(req, res) {
 });
 
 app.get('/game/:code', function(req, res) {
+  // var clientCount = 0;
+  // var offsets = [0,0,0,0,0,0,0,0];
+
+  // console.log('the code', req.params.code)
+
+  // var name = io.of(req.params.code);
+
+  // name.on('connection', function(socket) {
+  //   console.log('a user connected.  count: ' + (clientCount++));
+
+  //   // socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1");
+
+  //   // socket.on('join room', function(room, playerName, isHost) {
+  //   //   socket.room = room;
+  //   //   socket.playerName = playerName;
+  //   //   socket.isHost = isHost === 'true' ? true : false;
+
+  //   //   socket.join(room);
+  //   //   console.log('joined room', room + '; is host = ' + socket.isHost);
+
+  //   //   if (socket.isHost) {
+  //   //     socket.emit('set team', '1');
+  //   //   } else {
+  //   //     socket.emit('set team', '-1');
+  //   //   }
+
+  //   //   var tempRoom = io.nsps['/'].adapter.rooms[room];
+  //   //   var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
+  //   //   console.log('total clients in room ' + room + ': ' + totalClientsConnected);
+
+  //   //   socket.broadcast.to(room).emit('room server message', playerName + ' joined the room');
+  //   // });
+
+  //   // socket.on('disconnect', function() {
+  //   //   console.log('user', socket.playerName, 'disconnected from room', socket.room)
+  //   //   socket.leave(socket.room);
+  //   // });
+
+  //   // socket.on('update state', function(msg, room, playerName) {
+  //   //   // console.log('update state', room, playerName);
+  //   //   console.log('update state', socket.room, room, socket.room === room)
+
+  //   //   // if (socket.room === room) { // does not work as intended
+  //   //     var data = JSON.parse(msg);
+
+  //   //     // console.log('data', data);
+
+  //   //     for(i=0; i < data.deltas.length; i++) {
+  //   //       offsets[i] += data.team * data.deltas[i];
+  //   //     }
+
+  //   //     // socket.emit('update offsets', offsets.toString(), room);
+  //   //     io.to(room).emit('update offsets', offsets.toString(), room);
+  //   //     // io.sockets.in
+
+  //   //     // console.log('offsets: ' + offsets.toString());
+  //   //   // }
+  //   // });
+  // });
+
+
   res.render('game', {
     accessCode: req.session.accessCode,
     playerName: req.session.playerName,
@@ -70,56 +131,67 @@ function generateAccessCode() {
 var clientCount = 0;
 var offsets = [0,0,0,0,0,0,0,0];
 
-io.on('connection', function(socket) {
+var name = io.of('/test');
+
+name.on('connection', function(socket) {
   console.log('a user connected.  count: ' + (clientCount++));
-
-  // socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1");
-
-  socket.on('join room', function(room, playerName, isHost) {
-    socket.room = room;
-    socket.playerName = playerName;
-    socket.isHost = isHost === 'true' ? true : false;
-
-    socket.join(room);
-    console.log('joined room', room + '; is host = ' + socket.isHost);
-
-    if (socket.isHost) {
-      socket.emit('set team', '1');
-    } else {
-      socket.emit('set team', '-1');
-    }
-
-    var tempRoom = io.nsps['/'].adapter.rooms[room];
-    var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
-    console.log('total clients in room ' + room + ': ' + totalClientsConnected);
-
-    socket.broadcast.to(room).emit('room server message', playerName + ' joined the room');
-  });
-
-  socket.on('disconnect', function() {
-    console.log('user', socket.playerName, 'disconnected from room', socket.room)
-    socket.leave(socket.room);
-  });
-
-  socket.on('update state', function(msg, room, playerName) {
-    // console.log('update state', room, playerName);
-    // console.log('update state', socket.room, room, socket.room === room)
-
-    // if (socket.room === room) { // does not work as intended
-      data = JSON.parse(msg);
-
-      // console.log(data);
-
-      for(i=0; i < data.deltas.length; i++) {
-        offsets[i] += data.team * data.deltas[i];
-      }
-
-      socket.emit('update offsets', offsets.toString());
-
-      // console.log('offsets: ' + offsets.toString());
-    // }
-  });
 });
+
+// var clientCount = 0;
+// var offsets = [0,0,0,0,0,0,0,0];
+
+// io.on('connection', function(socket) {
+//   console.log('a user connected.  count: ' + (clientCount++));
+
+//   // socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1");
+
+//   socket.on('join room', function(room, playerName, isHost) {
+//     socket.room = room;
+//     socket.playerName = playerName;
+//     socket.isHost = isHost === 'true' ? true : false;
+
+//     socket.join(room);
+//     console.log('joined room', room + '; is host = ' + socket.isHost);
+
+//     if (socket.isHost) {
+//       socket.emit('set team', '1');
+//     } else {
+//       socket.emit('set team', '-1');
+//     }
+
+//     var tempRoom = io.nsps['/'].adapter.rooms[room];
+//     var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
+//     console.log('total clients in room ' + room + ': ' + totalClientsConnected);
+
+//     socket.broadcast.to(room).emit('room server message', playerName + ' joined the room');
+//   });
+
+//   socket.on('disconnect', function() {
+//     console.log('user', socket.playerName, 'disconnected from room', socket.room)
+//     socket.leave(socket.room);
+//   });
+
+//   socket.on('update state', function(msg, room, playerName) {
+//     // console.log('update state', room, playerName);
+//     console.log('update state', socket.room, room, socket.room === room)
+
+//     // if (socket.room === room) { // does not work as intended
+//       var data = JSON.parse(msg);
+
+//       // console.log('data', data);
+
+//       for(i=0; i < data.deltas.length; i++) {
+//         offsets[i] += data.team * data.deltas[i];
+//       }
+
+//       // socket.emit('update offsets', offsets.toString(), room);
+//       io.to(room).emit('update offsets', offsets.toString(), room);
+//       // io.sockets.in
+
+//       // console.log('offsets: ' + offsets.toString());
+//     // }
+//   });
+// });
 
 http.listen(port, function() {
   console.log('socket.io listening on port ' + port);
