@@ -11,7 +11,7 @@ app.configure(function() {
 //Get the dummy data
 require('./server/ddata.js');
 
-var port = 8080;
+var port = 3000;
 app.listen(port);
 console.log('Express server started on port %s', port);
 
@@ -48,6 +48,6 @@ io.on('connection', function(socket){
 });
 
 
-http.listen(3000, function(){
-  console.log('socket.io listening on *:3000');
+http.listen(8080, function(){
+  console.log('socket.io listening on *:8080');
 });

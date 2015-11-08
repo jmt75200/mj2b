@@ -1,4 +1,10 @@
-var socket = io(window.location.hostname + ":3000");
+var socket = io();
+// if (window.location.hostname == 'localhost')
+//   socket = io(window.location.hostname + ':3000')
+// else
+//   socket = io(window.location.hostname)
+
+// var socket = io(window.location.hostname);
 
 socket.on('game update', function(msg){
   data = JSON.parse(msg);
