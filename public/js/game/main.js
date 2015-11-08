@@ -1,5 +1,5 @@
-var styles = {
-  font: 'bold 50px Lato',
+var header_styles = {
+  font: 'bold 50px Arial',
   align: 'center',
   stroke: '#FFFFFF',
   strokeThickness: 5,
@@ -8,14 +8,24 @@ var styles = {
   dropShadowAngle: 0,
   fill: '#fbb03b'
 };
+var player_styles = {
+  font: 'bold 30px Arial',
+  align: 'center',
+  dropShadow: true,
+  dropShadowColor: '#eee',
+  dropShadowAngle: 0,
+  fill: '#666'
+};
 
 Game = {
   stage: new PIXI.Container(),
   zones: {},
-  scoreA: new PIXI.Text('9990', styles),
-  scoreB: new PIXI.Text('9990', styles),
-  timerTxt: new PIXI.Text('-', styles),
-  gameOverTxt: new PIXI.Text('', styles),
+  scoreA: new PIXI.Text('9990', header_styles),
+  scoreB: new PIXI.Text('9990', header_styles),
+  timerTxt: new PIXI.Text('-', header_styles),
+  gameOverTxt: new PIXI.Text('', header_styles),
+  player1Txt: new PIXI.Text('DARK PLAYER', player_styles),
+  player2Txt: new PIXI.Text('LIGHT PLAYER', player_styles),
   loopCounter: 0
 };
 
@@ -80,10 +90,16 @@ Game.init = function init(numLanes) {
   Game.stage.addChild(Game.scoreA);
   Game.scoreA.position.set(50, 30);
   Game.scoreA.anchor.set(0, 0.5);
+  Game.stage.addChild(Game.player1Txt);
+  Game.player1Txt.position.set(120, 30);
+  Game.player1Txt.anchor.set(0, 0.5);
 
   Game.stage.addChild(Game.scoreB);
   Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 30);
   Game.scoreB.anchor.set(1, 0.5);
+  Game.stage.addChild(Game.player2Txt);
+  Game.player2Txt.position.set(Game.SETTINGS.canvasWidth-120, 30);
+  Game.player2Txt.anchor.set(1, 0.5);
 
   Game.stage.addChild(Game.timerTxt);
   Game.timerTxt.position.set(Game.SETTINGS.canvasWidth/2, 20);
