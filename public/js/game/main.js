@@ -204,7 +204,9 @@ Game.loop = function loop() {
       hero.sprite.position.x = 0;
     }
 
-    freezeLane(hero, i);
+    if (!hero.lock) {
+      freezeLane(hero, i);
+    }
 
     // score the current lane
     var zone = Math.floor(hero.sprite.position.x / Game.VIEWPORT.zoneWidth);
@@ -270,9 +272,9 @@ function freezeLane(hero, lane){
     // console.log('YOU HIT THE END');
 
     var overlay = new PIXI.Graphics();
-    var laneBottom = lane * Game.VIEWPORT.laneHeight;
-    overlay.beginFill(0x868F91, 0.05);
-    overlay.drawRect(0, laneBottom, Game.SETTINGS.canvasWidth, Game.VIEWPORT.laneHeight);
+    var laneBottom = (lane * Game.VIEWPORT.laneHeight) + (Game.VIEWPORT.laneHeight / 2);
+    overlay.beginFill(0x4A565D, 0.7);
+    overlay.drawRect(0, laneBottom, Game.SETTINGS.canvasWidth, Game.VIEWPORT.laneHeight / 2);
 
     Game.stage.addChild(overlay);
   } else {
