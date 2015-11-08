@@ -1,8 +1,8 @@
 var styles = {
-  font: 'bold 60px Arial',
+  font: 'bold 50px Lato',
   align: 'center',
   stroke: '#FFFFFF',
-  strokeThickness: 6,
+  strokeThickness: 5,
   dropShadow: true,
   dropShadowColor: '#455455',
   dropShadowAngle: 0,
@@ -20,9 +20,9 @@ Game = {
 };
 
 Game.SETTINGS = {
-  backgroundColor: 0x1099bb,
+  backgroundColor: 0xdddddd,
   canvasWidth: 1200,
-  canvasHeight: 800,
+  canvasHeight: 860,
   // gameLength: 123, // for testing quick games
   gameLength: 7680, // seconds * 60 fps (5m5s)
   numLanes: 5,
@@ -74,15 +74,15 @@ Game.init = function init(numLanes) {
 
   var mountain = PIXI.Sprite.fromImage("assets/background.png");
   mountain.anchor.set(0,0);
-  mountain.position.set(0,0);
+  mountain.position.set(0,60);
   Game.stage.addChild(mountain);
 
   Game.stage.addChild(Game.scoreA);
-  Game.scoreA.position.set(50, 50);
+  Game.scoreA.position.set(50, 30);
   Game.scoreA.anchor.set(0, 0.5);
 
   Game.stage.addChild(Game.scoreB);
-  Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 50);
+  Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 30);
   Game.scoreB.anchor.set(1, 0.5);
 
   Game.stage.addChild(Game.timerTxt);
