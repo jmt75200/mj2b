@@ -88,8 +88,8 @@ Keys.init = function init(keyCodes) {
         hero.sprite.position.x += Game.STATE.team * (step - staminaOffset);
         Game.STATE.deltas[laneCopy] += (step - staminaOffset)/step;
 
-        console.log('stamina', hero.stamina);
-        console.log('offset: ' + staminaOffset + '; step size:', Game.STATE.team * (step - staminaOffset));
+        // console.log('stamina', hero.stamina);
+        // console.log('offset: ' + staminaOffset + '; step size:', Game.STATE.team * (step - staminaOffset));
       };
     };
 

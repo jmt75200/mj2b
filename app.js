@@ -67,18 +67,15 @@ function generateAccessCode() {
 var clientCount = 0;
 var offsets = [0,0,0,0,0,0,0,0];
 
-// io.sockets.on('connection', function(socket) {
-//   socket.on('create', function(room) {
-//     socket.join(room);
-//   });
-// });
-
 io.on('connection', function(socket) {
   console.log('a user connected.  count: ' + (clientCount++));
 
   socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  )
 
   socket.on('join room', function(room, playerName) {
+    socket.room = room;
+    socket.playerName = playerName;
+
     socket.join(room);
     console.log('joined room', room)
 
@@ -86,11 +83,12 @@ io.on('connection', function(socket) {
     var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
     console.log('total clients in room ' + room + ': ' + totalClientsConnected);
 
-    io.sockets.in(room).emit('room server message', playerName + ' joined the room');
+    socket.broadcast.to(room).emit('room server message', playerName + ' joined the room');
   });
 
   socket.on('disconnect', function() {
-    console.log('user disconnected');
+    console.log('user', socket.playerName, 'disconnected from room', socket.room)
+    socket.leave(socket.room);
   });
 
   socket.on('update state', function(msg) {
@@ -107,7 +105,6 @@ io.on('connection', function(socket) {
     socket.emit('update offsets', offsets.toString());
 
     // console.log('offsets: ' + offsets.toString());
-
   });
 });
 

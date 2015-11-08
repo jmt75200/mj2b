@@ -4,13 +4,6 @@ var playerName = $('#playerName').val();
 
 socket.emit('join room', roomName, playerName);
 
-// if (window.location.hostname == 'localhost')
-//   socket = io(window.location.hostname + ':3000')
-// else
-//   socket = io(window.location.hostname)
-
-// var socket = io(window.location.hostname);
-
 socket.on('room server message', function(message) {
   console.log('[room server message] ' + message);
 });
@@ -47,6 +40,4 @@ socket.on('update offsets', function(msg) {
 
     PlayerOne.heroes[i].sprite.position.x = (40 + offsets[i]) * Game.VIEWPORT.sizePerStep;
   }
-
 });
-
