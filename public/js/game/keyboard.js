@@ -61,8 +61,35 @@ Keys.init = function init(keyCodes) {
       var laneCopy = lane; // Closure and var are necessary
 
       keyHandler[laneCopy].press = function() {
-        PlayerOne.heroes[laneCopy].sprite.position.x += Game.STATE.team * Game.VIEWPORT.sizePerStep;
-        Game.STATE.deltas[laneCopy] += 1;
+        var hero = PlayerOne.heroes[laneCopy];
+        var step = Game.VIEWPORT.sizePerStep;
+        var staminaOffset = 0;
+        // var halfwayThreshold = Game.SETTINGS.staminaThreshold / 2;
+        // var threeFourthsThreshold = halfwayThreshold + (Game.SETTINGS.staminaThreshold / 4);
+
+        hero.stamina += 5;
+
+        // at max, halt the hero
+        if (hero.stamina >= Game.SETTINGS.staminaThreshold) {
+          staminaOffset = step;
+          hero.stamina = 100;
+        } else {
+          staminaOffset = hero.stamina/step;
+        }
+        // // at 3/4 stamina capacity, subtract 50% of the step
+        // else if (hero.stamina >= threeFourthsThreshold) {
+        //   staminaOffset = step * 0.50;
+        // }
+        // // at halfway capacity, subtract 20% of the step
+        // else if (hero.stamina >= halfwayThreshold) {
+        //   staminaOffset = step * 0.20;
+        // }
+
+        hero.sprite.position.x += Game.STATE.team * (step - staminaOffset);
+        Game.STATE.deltas[laneCopy] += (step - staminaOffset)/step;
+
+        console.log('stamina', hero.stamina);
+        console.log('offset: ' + staminaOffset + '; step size:', Game.STATE.team * (step - staminaOffset));
       };
     };
 
