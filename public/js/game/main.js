@@ -24,7 +24,7 @@ Game.SETTINGS = {
   canvasWidth: 1200,
   canvasHeight: 860,
   // gameLength: 123, // for testing quick games
-  gameLength: 7680, // seconds * 60 fps (5m5s)
+  gameLength: 7680, // seconds * 60 fps (2m8s)
   numLanes: 5,
   numZonesPerLane: 8,
   playerOneZoneColor: 0xEDEFF5,
