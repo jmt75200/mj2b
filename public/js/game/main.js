@@ -1,6 +1,7 @@
 Game = {
   stage: new PIXI.Container(),
-  zones: {}
+  zones: {},
+  loopCounter: 0
 };
 
 Game.SETTINGS = {
@@ -12,6 +13,9 @@ Game.SETTINGS = {
   playerOneZoneColor: 0xEDEFF5,
   playerTwoZoneColor: 0x4A565D,
   botMode: true,
+  staminaThreshold: 100,
+  improveStaminaCounter: 60, // decrease stamina once per second
+  improveStaminaAmount: 15, // decrease stamina by 15
   // scores for each zone, index 0 to 7
   playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
   playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
@@ -96,7 +100,15 @@ Game.loop = function loop() {
 
   requestAnimationFrame(Game.loop);
 
+  Game.loopCounter++;
+
   PlayerOne.heroes.forEach(function(hero, i) {
+    if (Game.loopCounter === Game.SETTINGS.improveStaminaCounter) {
+      hero.stamina -= Game.SETTINGS.improveStaminaAmount;
+      if (hero.stamina < 0) {
+        hero.stamina = 0;
+      }
+    }
     hero.sprite.position.x -= (Game.SETTINGS.cpuDifficulty/60 * Game.VIEWPORT.sizePerStep);
 
     if (hero.sprite.position.x >= Game.SETTINGS.canvasWidth) {
@@ -138,6 +150,10 @@ Game.loop = function loop() {
   if ((Game.STATE.frame % 60) == 0) {
     socket.emit('update state', JSON.stringify(Game.STATE) );
     Game.STATE.deltas = [0,0,0,0,0,0,0,0];
+  }
+
+  if (Game.loopCounter > Game.SETTINGS.improveStaminaCounter) {
+    Game.loopCounter = 0;
   }
 
   Game.renderer.render(Game.stage);
