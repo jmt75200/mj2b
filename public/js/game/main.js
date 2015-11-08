@@ -161,7 +161,6 @@ Game.loop = function loop() {
     Game.SETTINGS.gameLength = 0;
     var status = determineWinner();
     var winner;
-    // console.log('status',status);
     switch( status ){
       case 0: winner = 'IT\'S A TIE';
       break;
@@ -172,6 +171,37 @@ Game.loop = function loop() {
       default: winner = 'PLAY A NEW GAME';
     }
 
+
+    var playAgain = new PIXI.Graphics();
+    var paWidth = Game.SETTINGS.canvasWidth / 4;
+    var paHeight = Game.SETTINGS.canvasHeight / 4;
+
+    playAgain.lineStyle(2, 0xF7931E, 1);
+    playAgain.beginFill(0xFBB03B, 1);
+    playAgain.drawRoundedRect(paWidth + paWidth / 2, paHeight + paHeight / 2, 300, 60, 15);
+    playAgain.endFill();
+
+    playAgain.interactive = true;
+
+    playAgain.click = function(evt) {
+      window.location.href = '/';
+    };
+
+    Game.stage.addChild(playAgain);
+
+    var paStyles = {
+      font: 'bold 20px Arial',
+      align: 'center',
+      strokeThickness: 1,
+      fill: '#FFF8B2'
+    };
+
+    var playAgainText = new PIXI.Text('Play Again?', paStyles);
+    playAgainText.position.set(paWidth * 1.8, paHeight * 1.65);
+    playAgainText.anchor.set(0, 0.5);
+    Game.stage.addChild(playAgainText);
+
+
     Game.timerTxt.text = winner;
     PlayerOne.heroes.forEach( function( hero,i ){
       hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
@@ -181,8 +211,8 @@ Game.loop = function loop() {
     // Game.gameOverTxt.text = winner;
   } else {
     Game.timerTxt.text = ((Game.SETTINGS.gameLength/60)/60).toFixed(2);
+    requestAnimationFrame(Game.loop);
   }
-  requestAnimationFrame(Game.loop);
 
   Game.loopCounter++;
 
