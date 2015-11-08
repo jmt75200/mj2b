@@ -1,30 +1,40 @@
-var styles = {
-  font: 'bold 60px Arial',
+var header_styles = {
+  font: 'bold 50px Arial',
   align: 'center',
   stroke: '#FFFFFF',
-  strokeThickness: 3,
+  strokeThickness: 5,
   dropShadow: true,
   dropShadowColor: '#455455',
   dropShadowAngle: 0,
   fill: '#fbb03b'
 };
+var player_styles = {
+  font: 'bold 30px Arial',
+  align: 'center',
+  dropShadow: true,
+  dropShadowColor: '#eee',
+  dropShadowAngle: 0,
+  fill: '#666'
+};
 
 Game = {
   stage: new PIXI.Container(),
   zones: {},
-  scoreA: new PIXI.Text('9990', styles),
-  scoreB: new PIXI.Text('9990', styles),
-  timerTxt: new PIXI.Text('-', styles),
-  gameOverTxt: new PIXI.Text('', styles),
+  scoreA: new PIXI.Text('9990', header_styles),
+  scoreB: new PIXI.Text('9990', header_styles),
+  timerTxt: new PIXI.Text('-', header_styles),
+  gameOverTxt: new PIXI.Text('', header_styles),
+  player1Txt: new PIXI.Text('DARK PLAYER', player_styles),
+  player2Txt: new PIXI.Text('LIGHT PLAYER', player_styles),
   loopCounter: 0
 };
 
 Game.SETTINGS = {
-  backgroundColor: 0x1099bb,
+  backgroundColor: 0xdddddd,
   canvasWidth: 1200,
-  canvasHeight: 800,
+  canvasHeight: 860,
   // gameLength: 123, // for testing quick games
-  gameLength: 7680, // seconds * 60 fps (5m5s)
+  gameLength: 7680, // seconds * 60 fps (2m8s)
   numLanes: 5,
   numZonesPerLane: 8,
   playerOneZoneColor: 0xEDEFF5,
@@ -74,16 +84,22 @@ Game.init = function init(numLanes) {
 
   var mountain = PIXI.Sprite.fromImage("assets/background.png");
   mountain.anchor.set(0,0);
-  mountain.position.set(0,0);
+  mountain.position.set(0,60);
   Game.stage.addChild(mountain);
 
   Game.stage.addChild(Game.scoreA);
-  Game.scoreA.position.set(50, 50);
+  Game.scoreA.position.set(50, 30);
   Game.scoreA.anchor.set(0, 0.5);
+  Game.stage.addChild(Game.player1Txt);
+  Game.player1Txt.position.set(120, 30);
+  Game.player1Txt.anchor.set(0, 0.5);
 
   Game.stage.addChild(Game.scoreB);
-  Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 50);
+  Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 30);
   Game.scoreB.anchor.set(1, 0.5);
+  Game.stage.addChild(Game.player2Txt);
+  Game.player2Txt.position.set(Game.SETTINGS.canvasWidth-120, 30);
+  Game.player2Txt.anchor.set(1, 0.5);
 
   Game.stage.addChild(Game.timerTxt);
   Game.timerTxt.position.set(Game.SETTINGS.canvasWidth/2, 20);
@@ -204,7 +220,9 @@ Game.loop = function loop() {
       hero.sprite.position.x = 0;
     }
 
-    freezeLane(hero, i);
+    if (!hero.lock) {
+      freezeLane(hero, i);
+    }
 
     // score the current lane
     var zone = Math.floor(hero.sprite.position.x / Game.VIEWPORT.zoneWidth);
@@ -270,9 +288,9 @@ function freezeLane(hero, lane){
     // console.log('YOU HIT THE END');
 
     var overlay = new PIXI.Graphics();
-    var laneBottom = lane * Game.VIEWPORT.laneHeight;
-    overlay.beginFill(0x868F91, 0.05);
-    overlay.drawRect(0, laneBottom, Game.SETTINGS.canvasWidth, Game.VIEWPORT.laneHeight);
+    var laneBottom = (lane * Game.VIEWPORT.laneHeight) + (Game.VIEWPORT.laneHeight / 2);
+    overlay.beginFill(0x4A565D, 0.7);
+    overlay.drawRect(0, laneBottom, Game.SETTINGS.canvasWidth, Game.VIEWPORT.laneHeight / 2);
 
     Game.stage.addChild(overlay);
   } else {
