@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var port = 8080;
 
 app.use(express.static('./public'));
 app.set('view engine', 'jade');
@@ -32,7 +33,7 @@ app.get('/join', function(req, res) {
 
 app.get('/lobby/:code', function(req, res) {
   res.render('lobby', {
-    code: req.params.code,
+    accessCode: req.params.code,
     playerName: req.session.playerName
   });
 });
@@ -54,19 +55,15 @@ function generateAccessCode() {
   return code;
 }
 
-var port = 3000;
-app.listen(port);
-console.log('Express server started on port %s', port);
-
 var clientCount = 0;
 var offsets = [0,0,0,0,0,0,0,0];
 
-io.on('connection', function(socket){
+io.on('connection', function(socket) {
   console.log('a user connected.  count: ' + (clientCount++));
 
   socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  )
 
-  socket.on('disconnect', function(){
+  socket.on('disconnect', function() {
     console.log('user disconnected');
   });
 
@@ -75,19 +72,19 @@ io.on('connection', function(socket){
 
     data = JSON.parse(msg);
 
-    console.log(data);
+    // console.log(data);
 
     for(i=0; i < data.deltas.length; i++) {
       offsets[i] += data.team * data.deltas[i];
     }
 
-    socket.emit('update offsets', offsets.toString() );
+    socket.emit('update offsets', offsets.toString());
 
-    console.log('offsets: ' + offsets.toString() );
+    // console.log('offsets: ' + offsets.toString());
 
   });
 });
 
-http.listen(8080, function(){
-  console.log('socket.io listening on *:8080');
+http.listen(port, function() {
+  console.log('socket.io listening on port ' + port);
 });
