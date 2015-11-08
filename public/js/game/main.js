@@ -2,7 +2,7 @@ var styles = {
   font: 'bold 60px Arial',
   align: 'center',
   stroke: '#FFFFFF',
-  strokeThickness: 3,
+  strokeThickness: 6,
   dropShadow: true,
   dropShadowColor: '#455455',
   dropShadowAngle: 0,
