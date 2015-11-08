@@ -209,10 +209,11 @@ Game.init();
 Game.loop();
 
 function freezeLane( hero ){
-  if ( hero.sprite.position.x >= (Game.SETTINGS.canvasWidth-50) ){
+  if ( hero.sprite.position.x >= Game.SETTINGS.canvasWidth || hero.sprite.position.x <= 0 ){
     hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
-    console.log('YOU HIT THE END');
+    hero.sprite.position.y = Game.SETTINGS.canvasWidth + 2000;
+    // console.log('YOU HIT THE END');
   } else {
-    console.log('STILL OK');
+    // console.log('STILL OK');
   }
 }
