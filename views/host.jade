@@ -1,9 +1,15 @@
 extends ./layout
 
 block content
-  form(method="post", action="/games")
-    input(type="text", name="playerName", placeholder="Enter a name", required)
-    br
-    input(type="submit", value="Host", class="button radius tiny")
-    br
-    a(href="/", class="button radius tiny") Back
+  .container
+    .row
+      img(src="./assets/heroes/snailhouse.png") 
+    .logo 
+      h1 Lane Heroes
+      h2 Host a Private Game
+    .wrapper
+      form(method="post", action="/games")
+        input(type="text", name="playerName", placeholder="Enter a name", required)
+        input(type="submit", value="Host", class="button radius tiny")
+      
+      a.button(href="/", class="back") Back

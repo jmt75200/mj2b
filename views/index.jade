@@ -1,12 +1,19 @@
 extends ./layout
 
 block content
-  .row
-    nav
-      ul
-        li
-          a.button(href="/host") Host Game
-        li
-          a(href="/join", class='button radius tiny') Join Game
-  .row
-    .content-block
+  .container
+    .row
+      img(src="./assets/splash2-01.png") 
+
+    .logo 
+      h1 Lane Heroes
+      h2 Test your skills. Become a Lane Hero.
+    
+    .row
+      nav
+        ul
+          li
+            a.button(href="/host") Host Game
+          li
+            a.button(href="/join") Join Game
+      

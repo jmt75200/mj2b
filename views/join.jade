@@ -1,11 +1,17 @@
 extends ./layout
 
 block content
-  form(method="post", action="/join")
-    input(type="text", name="accessCode", placeholder="Enter an access code", required)
-    br
-    input(type="text", name="playerName", placeholder="Enter your name", required)
-    br
-    input(type="submit", value="Join", class="button radius tiny")
-    br
-    a(href="/", class="button radius tiny") Back
+  .container
+    .row
+      img(src="./assets/heroes/snailhouse.png") 
+    .logo 
+      h1 Lane Heroes
+      h2 Join a Friend's Game
+
+    .wrapper
+      form(method="post", action="/join")
+        input(type="text", name="accessCode", placeholder="Enter an access code", required)
+        input(type="text", name="playerName", placeholder="Enter your name", required)
+        input(type="submit", value="Join", class="button radius tiny")
+
+      a.button(href="/", class="back") Back

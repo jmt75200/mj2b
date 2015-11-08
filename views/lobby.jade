@@ -1,17 +1,26 @@
 extends ./layout
 
 block content
-  h1 Waiting for Players
-  p Access code:&nbsp;
-    span(id="accessCode") #{accessCode}
-  p Welcome&nbsp;
-    span(id="playerName") #{playerName}
-    | !
-  input(type="hidden", id="isHost" value="#{isHost}")
-  div(id="serverMessages")
-  a(href="/game/#{accessCode}", class="button radius tiny") Start Game
-  br
-  a(href="/", class="button radius tiny") Leave Game
+  .container
+    .row
+      img(src="../assets/heroes/snailhouse.png") 
+    .logo 
+      h1 Lane Heroes
+      h2 Waiting for Players
+    .content_container
+      .info
+        p Access code:&nbsp;
+          span(id="accessCode") #{accessCode}
+        p Welcome&nbsp;
+          span(id="playerName") #{playerName}
+          | !
+      .server_messages
+        input(type="hidden", id="isHost" value="#{isHost}")
+        div(id="serverMessages")
+      .buttons
+        a.button(href="/game/#{accessCode}") Start Game
+
+        a.button(href="/", class="back") Leave Game
 
   script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js")
   script(src="https://cdn.socket.io/socket.io-1.3.7.js")
