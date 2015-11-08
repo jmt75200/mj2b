@@ -45,7 +45,7 @@ Game.init = function init(numLanes) {
   var zoneColor = null;
   var zoneTemp = null;
 
-  var numSteps = 40;
+  var numSteps = 80;
   var verticalOffset = 0;
   Game.VIEWPORT.zoneWidth = zoneWidth;
   Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
