@@ -43,6 +43,11 @@ app.post('/games', function(req, res) {
   res.redirect('/lobby/' + generateAccessCode());
 });
 
+app.post('/join', function(req, res) {
+  req.session.playerName = req.body.playerName;
+  res.redirect('/lobby/' + req.body.accessCode);
+});
+
 // Credit goes to Spyfall: https://github.com/evanbrumley/spyfall
 function generateAccessCode() {
   var code = '';
@@ -58,10 +63,27 @@ function generateAccessCode() {
 var clientCount = 0;
 var offsets = [0,0,0,0,0,0,0,0];
 
+// io.sockets.on('connection', function(socket) {
+//   socket.on('create', function(room) {
+//     socket.join(room);
+//   });
+// });
+
 io.on('connection', function(socket) {
   console.log('a user connected.  count: ' + (clientCount++));
 
   socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  )
+
+  socket.on('join room', function(room) {
+    socket.join(room);
+    console.log('joined room', room)
+
+    var tempRoom = io.nsps['/'].adapter.rooms[room];
+    var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
+    console.log('total clients in room ' + room + ': ' + totalClientsConnected);
+
+    io.sockets.in(room).emit('room server message', 'Welcome to room ' + room);
+  });
 
   socket.on('disconnect', function() {
     console.log('user disconnected');

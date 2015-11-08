@@ -1,1 +1,11 @@
-p join
+extends ./layout
+
+block content
+  form(method="post", action="/join")
+    input(type="text", name="accessCode", placeholder="Enter an access code", required)
+    br
+    input(type="text", name="playerName", placeholder="Enter your name", required)
+    br
+    input(type="submit", value="Join", class="button radius tiny")
+    br
+    a(href="/", class="button radius tiny") Back
