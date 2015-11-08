@@ -1,14 +1,18 @@
 var styles = {
-  font: '16px Lato',
+  font: 'bold 60px Arial',
   align: 'center',
   stroke: '#FFFFFF',
-  strokeThickness: '3'
-
+  strokeThickness: 3,
+  dropShadow: true,
+  dropShadowColor: '#455455',
+  dropShadowAngle: 0,
+  fill: '#fbb03b'
 };
+
 Game = {
   stage: new PIXI.Container(),
   zones: {},
-  scoreA: new PIXI.Text('9990'),
+  scoreA: new PIXI.Text('9990', styles),
   scoreB: new PIXI.Text('9990', styles),
   timerTxt: new PIXI.Text('-', styles),
   gameOverTxt: new PIXI.Text('', styles),
@@ -20,7 +24,7 @@ Game.SETTINGS = {
   canvasWidth: 1200,
   canvasHeight: 800,
   // gameLength: 123, // for testing quick games
-  gameLength: 18300, // seconds * 60 fps (5m5s)
+  gameLength: 7680, // seconds * 60 fps (5m5s)
   numLanes: 5,
   numZonesPerLane: 8,
   playerOneZoneColor: 0xEDEFF5,
@@ -83,7 +87,7 @@ Game.init = function init(numLanes) {
 
   Game.stage.addChild(Game.timerTxt);
   Game.timerTxt.position.set(Game.SETTINGS.canvasWidth/2, 20);
-  Game.timerTxt.anchor.set(0.5, 0.5);
+  Game.timerTxt.anchor.set(0.5, 0.3);
 
   Game.stage.addChild(Game.gameOverTxt);
   Game.gameOverTxt.position.set(Game.SETTINGS.canvasWidth/2, Game.SETTINGS.canvasHeight/2);
