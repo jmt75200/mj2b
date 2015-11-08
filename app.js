@@ -3,21 +3,30 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-//Create a static file server
-app.configure(function() {
-  app.use(express.static(__dirname + '/public'));
+app.use(express.static('./public'));
+app.set('view engine', 'jade');
+
+app.get('/', function(req, res) {
+  res.render('index');
 });
 
-//Get the dummy data
-require('./server/ddata.js');
+app.get('/game', function(req, res) {
+  res.render('game');
+});
+
+app.get('/host', function(req, res) {
+  res.render('host');
+});
+
+app.get('/join', function(req, res) {
+  res.render('join');
+});
 
 var port = 3000;
 app.listen(port);
 console.log('Express server started on port %s', port);
 
 var clientCount = 0;
-
-
 var offsets = [0,0,0,0,0,0,0,0];
 
 io.on('connection', function(socket){
@@ -46,7 +55,6 @@ io.on('connection', function(socket){
 
   });
 });
-
 
 http.listen(8080, function(){
   console.log('socket.io listening on *:8080');
