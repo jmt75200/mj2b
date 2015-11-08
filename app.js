@@ -103,7 +103,7 @@ io.on('connection', function(socket) {
 
   socket.on('update state', function(msg, room, playerName) {
     // console.log('update state', room, playerName);
-    console.log('update state', socket.room, room, socket.room === room);
+    // console.log('update state', socket.room, room, socket.room === room);
 
     // if (socket.room === room) { // does not work as intended
       data = JSON.parse(msg);
