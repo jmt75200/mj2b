@@ -16,6 +16,17 @@ var player_styles = {
   dropShadowAngle: 0,
   fill: '#666'
 };
+var key_styles = {
+  font: 'bold 30px Arial',
+  align: 'left',
+  stroke: '#FFFFFF',
+  strokeThickness: 3,
+  dropShadow: true,
+  dropShadowColor: '#eee',
+  dropShadowAngle: 0,
+  fill: '#222',
+  alpha: 0.5
+};
 
 Game = {
   stage: new PIXI.Container(),
@@ -26,6 +37,11 @@ Game = {
   gameOverTxt: new PIXI.Text('', header_styles),
   player1Txt: new PIXI.Text('DARK PLAYER', player_styles),
   player2Txt: new PIXI.Text('LIGHT PLAYER', player_styles),
+  keyS: new PIXI.Text('S', key_styles),
+  keyD: new PIXI.Text('D', key_styles),
+  keyF: new PIXI.Text('F', key_styles),
+  keyJ: new PIXI.Text('J', key_styles),
+  keyK: new PIXI.Text('K', key_styles),
   loopCounter: 0
 };
 
@@ -48,6 +64,7 @@ Game.SETTINGS = {
   playerTwoLaneScores: [10, 0, 6, 0, 3, 0, 1, 0], // moving left
   // playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
   // playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
+  playerLanePoints: [10,1,6,3,3,6,1,10],
 
   numSteps: 40,
 };
@@ -91,14 +108,14 @@ Game.init = function init(numLanes) {
   Game.scoreA.position.set(50, 30);
   Game.scoreA.anchor.set(0, 0.5);
   Game.stage.addChild(Game.player1Txt);
-  Game.player1Txt.position.set(120, 30);
+  Game.player1Txt.position.set(150, 30);
   Game.player1Txt.anchor.set(0, 0.5);
 
   Game.stage.addChild(Game.scoreB);
   Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 30);
   Game.scoreB.anchor.set(1, 0.5);
   Game.stage.addChild(Game.player2Txt);
-  Game.player2Txt.position.set(Game.SETTINGS.canvasWidth-120, 30);
+  Game.player2Txt.position.set(Game.SETTINGS.canvasWidth-150, 30);
   Game.player2Txt.anchor.set(1, 0.5);
 
   Game.stage.addChild(Game.timerTxt);
@@ -108,6 +125,17 @@ Game.init = function init(numLanes) {
   Game.stage.addChild(Game.gameOverTxt);
   Game.gameOverTxt.position.set(Game.SETTINGS.canvasWidth/2, Game.SETTINGS.canvasHeight/2);
   Game.gameOverTxt.anchor.set(0.5, 0);
+
+  Game.stage.addChild(Game.keyS);
+  Game.keyS.position.set(50,110);
+  Game.stage.addChild(Game.keyD);
+  Game.keyD.position.set(50,280);
+  Game.stage.addChild(Game.keyF);
+  Game.keyF.position.set(50,440);
+  Game.stage.addChild(Game.keyJ);
+  Game.keyJ.position.set(50,600);
+  Game.stage.addChild(Game.keyK);
+  Game.keyK.position.set(50,780);
 
 
   for (var i = 0; i < numLanes; i++) {
@@ -177,7 +205,6 @@ Game.loop = function loop() {
     Game.SETTINGS.gameLength = 0;
     var status = determineWinner();
     var winner;
-    // console.log('status',status);
     switch( status ){
       case 0: winner = 'IT\'S A TIE';
       break;
@@ -188,6 +215,37 @@ Game.loop = function loop() {
       default: winner = 'PLAY A NEW GAME';
     }
 
+
+    var playAgain = new PIXI.Graphics();
+    var paWidth = Game.SETTINGS.canvasWidth / 4;
+    var paHeight = Game.SETTINGS.canvasHeight / 4;
+
+    playAgain.lineStyle(2, 0xF7931E, 1);
+    playAgain.beginFill(0xFBB03B, 1);
+    playAgain.drawRoundedRect(paWidth + paWidth / 2, paHeight + paHeight / 2, 300, 60, 15);
+    playAgain.endFill();
+
+    playAgain.interactive = true;
+
+    playAgain.click = function(evt) {
+      window.location.href = '/';
+    };
+
+    Game.stage.addChild(playAgain);
+
+    var paStyles = {
+      font: 'bold 20px Arial',
+      align: 'center',
+      strokeThickness: 1,
+      fill: '#FFF8B2'
+    };
+
+    var playAgainText = new PIXI.Text('Play Again?', paStyles);
+    playAgainText.position.set(paWidth * 1.8, paHeight * 1.65);
+    playAgainText.anchor.set(0, 0.5);
+    Game.stage.addChild(playAgainText);
+
+
     Game.timerTxt.text = winner;
     PlayerOne.heroes.forEach( function( hero,i ){
       hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
@@ -197,8 +255,8 @@ Game.loop = function loop() {
     // Game.gameOverTxt.text = winner;
   } else {
     Game.timerTxt.text = ((Game.SETTINGS.gameLength/60)/60).toFixed(2);
+    requestAnimationFrame(Game.loop);
   }
-  requestAnimationFrame(Game.loop);
 
   Game.loopCounter++;
 
