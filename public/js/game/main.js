@@ -63,6 +63,7 @@ Game.init = function init(numLanes) {
   var numSteps = Game.SETTINGS.numSteps;
   var verticalOffset = 0;
   Game.VIEWPORT.zoneWidth = zoneWidth;
+  Game.VIEWPORT.laneHeight = laneHeight;
   Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
 
   Game.SETTINGS.cpuDifficulty = 0;
@@ -198,8 +199,8 @@ Game.loop = function loop() {
     if (hero.sprite.position.x < 0) {
       hero.sprite.position.x = 0;
     }
-    // console.log('hero.lock',hero);
-    freezeLane(hero);
+
+    freezeLane(hero, i);
 
     // score the current lane
     var zone = Math.floor(hero.sprite.position.x / Game.VIEWPORT.zoneWidth);
@@ -257,12 +258,19 @@ Game.loop = function loop() {
 Game.init();
 Game.loop();
 
-function freezeLane( hero ){
+function freezeLane(hero, lane){
   if ( hero.sprite.position.x >= Game.SETTINGS.canvasWidth || hero.sprite.position.x <= 0 ){
     hero.lock = true;
     hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
     hero.sprite.position.y = Game.SETTINGS.canvasWidth + 2000;
     // console.log('YOU HIT THE END');
+
+    var overlay = new PIXI.Graphics();
+    var laneBottom = lane * Game.VIEWPORT.laneHeight;
+    overlay.beginFill(0x868F91, 0.05);
+    overlay.drawRect(0, laneBottom, Game.SETTINGS.canvasWidth, Game.VIEWPORT.laneHeight);
+
+    Game.stage.addChild(overlay);
   } else {
     // console.log('STILL OK');
   }
