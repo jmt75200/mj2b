@@ -96,6 +96,10 @@ io.on('connection', function(socket) {
     socket.broadcast.to(room).emit('room server message', playerName + ' joined the room');
   });
 
+  socket.on('start game', function(room) {
+    socket.broadcast.to(room).emit('game started', room);
+  });
+
   socket.on('disconnect', function() {
     console.log('user', socket.playerName, 'disconnected from room', socket.room);
     socket.leave(socket.room);
@@ -103,21 +107,18 @@ io.on('connection', function(socket) {
 
   socket.on('update state', function(msg, room, playerName) {
     // console.log('update state', room, playerName);
-    // console.log('update state', socket.room, room, socket.room === room);
 
-    // if (socket.room === room) { // does not work as intended
-      data = JSON.parse(msg);
+    data = JSON.parse(msg);
 
-      // console.log(data);
+    // console.log(data);
 
-      for(i=0; i < data.deltas.length; i++) {
-        offsets[i] += data.team * data.deltas[i];
-      }
+    for(i=0; i < data.deltas.length; i++) {
+      offsets[i] += data.team * data.deltas[i];
+    }
 
-      socket.emit('update offsets', offsets.toString());
+    io.to(room).emit('update offsets', offsets.toString());
 
-      // console.log('offsets: ' + offsets.toString());
-    // }
+    // console.log('offsets: ' + offsets.toString());
   });
 });
 
