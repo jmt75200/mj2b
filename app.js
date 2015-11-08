@@ -70,7 +70,7 @@ var offsets = [0,0,0,0,0,0,0,0];
 io.on('connection', function(socket) {
   console.log('a user connected.  count: ' + (clientCount++));
 
-  socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  )
+  socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1")
 
   socket.on('join room', function(room, playerName) {
     socket.room = room;
@@ -91,20 +91,23 @@ io.on('connection', function(socket) {
     socket.leave(socket.room);
   });
 
-  socket.on('update state', function(msg) {
-    // console.log(msg);
+  socket.on('update state', function(msg, room, playerName) {
+    // console.log('update state', room, playerName);
+    console.log('update state socket room', socket.room, room, socket.room === room)
 
-    data = JSON.parse(msg);
+    // if (socket.room === room) { // fails to update at all with this if statement
+      data = JSON.parse(msg);
 
-    // console.log(data);
+      // console.log(data);
 
-    for(i=0; i < data.deltas.length; i++) {
-      offsets[i] += data.team * data.deltas[i];
-    }
+      for(i=0; i < data.deltas.length; i++) {
+        offsets[i] += data.team * data.deltas[i];
+      }
 
-    socket.emit('update offsets', offsets.toString());
+      socket.emit('update offsets', offsets.toString());
 
-    // console.log('offsets: ' + offsets.toString());
+      // console.log('offsets: ' + offsets.toString());
+    // }
   });
 });
 

@@ -168,7 +168,7 @@ Game.loop = function loop() {
 
 
   if ((Game.STATE.frame % 60) == 0) {
-    socket.emit('update state', JSON.stringify(Game.STATE) );
+    socket.emit('update state', JSON.stringify(Game.STATE), roomName, playerName);
     Game.STATE.deltas = [0,0,0,0,0,0,0,0];
   }
 

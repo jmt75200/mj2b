@@ -8,10 +8,11 @@ socket.on('room server message', function(message) {
   console.log('[room server message] ' + message);
 });
 
-socket.on('game update', function(msg){
-  data = JSON.parse(msg);
-  console.log(data);
-});
+// not currently used
+// socket.on('game update', function(msg){
+//   data = JSON.parse(msg);
+//   console.log(data);
+// });
 
 socket.on('set team', function(msg) {
   console.log("set team: " + msg)
