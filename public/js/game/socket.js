@@ -1,15 +1,18 @@
-var socket = io();
-// if (window.location.hostname == 'localhost')
-//   socket = io(window.location.hostname + ':3000')
-// else
-//   socket = io(window.location.hostname)
+var socket = io.connect();
+var roomName = $('#accessCode').val();
+var playerName = $('#playerName').val();
 
-// var socket = io(window.location.hostname);
+socket.emit('join room', roomName, playerName);
 
-socket.on('game update', function(msg){
-  data = JSON.parse(msg);
-  console.log(data);
+socket.on('room server message', function(message) {
+  console.log('[room server message] ' + message);
 });
+
+// not currently used
+// socket.on('game update', function(msg){
+//   data = JSON.parse(msg);
+//   console.log(data);
+// });
 
 socket.on('set team', function(msg) {
   console.log("set team: " + msg)
@@ -25,7 +28,7 @@ socket.on('update offsets', function(msg) {
   // console.log('got data: ' + msg)
 
   var offsets = msg.split(",");
-  for(var i=0; i<offsets.length; i++) { offsets[i] = +offsets[i]; } 
+  for(var i=0; i<offsets.length; i++) { offsets[i] = +offsets[i]; }
 
   // console.log('converted: ' + offsets);
 
@@ -38,6 +41,4 @@ socket.on('update offsets', function(msg) {
 
     PlayerOne.heroes[i].sprite.position.x = (Game.SETTINGS.numSteps/2 + offsets[i]) * Game.VIEWPORT.sizePerStep;
   }
-
 });
-

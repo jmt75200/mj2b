@@ -235,9 +235,8 @@ Game.loop = function loop() {
   Game.scoreB.text = PlayerOne.totalScoreB.toString();
   // Game.scoreB.text = Game.STATE.score[1];
 
-
   if ((Game.STATE.frame % 60) === 0) {
-    socket.emit('update state', JSON.stringify(Game.STATE) );
+    socket.emit('update state', JSON.stringify(Game.STATE), roomName, playerName);
     Game.STATE.deltas = [0,0,0,0,0,0,0,0];
   }
 
