@@ -36,7 +36,7 @@ socket.on('update offsets', function(msg) {
     // console.log(PlayerOne.heroes[i].x +'   '+ (40 + offsets[i]) * Game.VIEWPORT.sizePerStep )
     //PlayerOne.heroes[laneCopy].sprite.position.x
 
-    PlayerOne.heroes[i].sprite.position.x = (40 + offsets[i]) * Game.VIEWPORT.sizePerStep;
+    PlayerOne.heroes[i].sprite.position.x = (Game.SETTINGS.numSteps/2 + offsets[i]) * Game.VIEWPORT.sizePerStep;
   }
 
 });

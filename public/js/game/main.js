@@ -20,9 +20,11 @@ Game.SETTINGS = {
   improveStaminaAmount: 10, // decrease stamina by 10
   // scores for each zone, index 0 to 7
   playerOneLaneScores: [0, 1, 0, 3, 0, 6, 0, 10], // moving right
-  playerTwoLaneScores: [10, 0, 6, 0, 3, 0, 1, 0] // moving left
+  playerTwoLaneScores: [10, 0, 6, 0, 3, 0, 1, 0], // moving left
   // playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
   // playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
+
+  numSteps: 40,
 };
 
 Game.VIEWPORT = {
@@ -47,7 +49,7 @@ Game.init = function init(numLanes) {
   var zoneColor = null;
   var zoneTemp = null;
 
-  var numSteps = 40;
+  var numSteps = Game.SETTINGS.numSteps;
   var verticalOffset = 0;
   Game.VIEWPORT.zoneWidth = zoneWidth;
   Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
