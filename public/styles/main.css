@@ -126,7 +126,7 @@ input[type=submit]{
 }*/
 
 /* Lobby */
-.content_container{
+.content_container, .team{
   width: 320px;
   margin: 0 auto 30px;
   text-align: left;
@@ -151,4 +151,8 @@ input[type=submit]{
 
 .content_container ol li{
   margin-bottom: 20px;
+}
+
+.team{
+  text-align: left;
 }
