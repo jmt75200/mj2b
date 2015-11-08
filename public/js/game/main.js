@@ -1,6 +1,8 @@
 Game = {
   stage: new PIXI.Container(),
-  zones: {}
+  zones: {},
+  scoreA: new PIXI.Text('9990'),
+  scoreB: new PIXI.Text('9990', {align: 'right'}),
 };
 
 Game.SETTINGS = {
@@ -46,6 +48,19 @@ Game.init = function init(numLanes) {
 
   Game.SETTINGS.cpuDifficulty = 0;
 
+  var mountain = PIXI.Sprite.fromImage("assets/background.png");
+  mountain.anchor.set(0,0);
+  mountain.position.set(0,-50);
+  Game.stage.addChild(mountain);
+
+  Game.stage.addChild(Game.scoreA);
+  Game.scoreA.position.set(50, 50);
+  Game.scoreA.anchor.set(0, 0.5);
+  Game.stage.addChild(Game.scoreB);
+  Game.scoreB.position.set(Game.SETTINGS.canvasWidth - 50, 50);
+  Game.scoreB.anchor.set(1, 0.5);
+
+
   for (var i = 0; i < numLanes; i++) {
     for (var k = 0; k < Game.SETTINGS.numZonesPerLane; k++) {
       if (k % 2 === 0) {
@@ -54,12 +69,12 @@ Game.init = function init(numLanes) {
         zoneColor = zone2;
       }
 
-      var zone = new PIXI.Graphics();
-      zone.beginFill(zoneColor);
-      zone.drawRect(k * zoneWidth, i * laneHeight, zoneWidth, laneHeight);
+      // var zone = new PIXI.Graphics();
+      // zone.beginFill(zoneColor);
+      // zone.drawRect(k * zoneWidth, i * laneHeight, zoneWidth, laneHeight);
 
-      Game.zones['l' + i + 'z' + k] = zone; // "lane 0 zone 0"
-      Game.stage.addChild(zone);
+      // Game.zones['l' + i + 'z' + k] = zone; // "lane 0 zone 0"
+      // Game.stage.addChild(zone);
     }
 
     zoneTemp = zone1;
@@ -72,6 +87,7 @@ Game.init = function init(numLanes) {
 
   for (var i = 0; i < numLanes; i++) {
     var lane = new PIXI.Container();
+
 
     var hero = PIXI.Sprite.fromImage('assets/heroes/bunny.png');
     hero.anchor.set(0.5, 0.5);
@@ -134,6 +150,10 @@ Game.loop = function loop() {
 
   // document.getElementById("p1score").innerHTML = Game.STATE.score[0];
   // document.getElementById("p2score").innerHTML = Game.STATE.score[1];
+
+  Game.scoreA.text = PlayerOne.totalScore.toString();
+  // Game.scoreB.text = Game.STATE.score[1];
+
 
   if ((Game.STATE.frame % 60) == 0) {
     socket.emit('update state', JSON.stringify(Game.STATE) );

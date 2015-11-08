@@ -22,14 +22,14 @@ socket.on('set team', function(msg) {
 });
 
 socket.on('update offsets', function(msg) {
-  console.log('got data: ' + msg)
+  // console.log('got data: ' + msg)
 
   var offsets = msg.split(",");
   for(var i=0; i<offsets.length; i++) { offsets[i] = +offsets[i]; } 
 
-  console.log('converted: ' + offsets);
+  // console.log('converted: ' + offsets);
 
-   console.log(Game.SETTINGS.numLanes);
+   // console.log(Game.SETTINGS.numLanes);
 
   for(i=0; i < Game.SETTINGS.numLanes; i++) {
     // convert offsets to positions and update heroes on screen
@@ -40,3 +40,4 @@ socket.on('update offsets', function(msg) {
   }
 
 });
+
