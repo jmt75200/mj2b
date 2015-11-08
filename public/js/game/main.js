@@ -42,7 +42,7 @@ Game.init = function init(numLanes) {
   Game.VIEWPORT.zoneHeight = zoneHeight;
   Game.VIEWPORT.sizePerStep = (Game.SETTINGS.canvasWidth - verticalOffset)/numSteps;
 
-  Game.SETTINGS.cpuDifficulty = 1;
+  Game.SETTINGS.cpuDifficulty = 0;
 
   for (var i = 0; i < numLanes; i++) {
     for (var k = 0; k < Game.SETTINGS.numZonesPerLane; k++) {
@@ -90,6 +90,8 @@ Game.init = function init(numLanes) {
 };
 
 Game.loop = function loop() {
+  Game.STATE.frame++;
+
   requestAnimationFrame(Game.loop);
 
   PlayerOne.heroes.forEach(function(hero, i) {
@@ -111,11 +113,16 @@ Game.loop = function loop() {
       Game.STATE.score[1] -= Game.SETTINGS.laneScoring[zone]/60.0
     }
 
-    Game.STATE.lanes[i] = hero.position.x
+//    Game.STATE.lanes[i] = hero.position.x
   });
 
-  document.getElementById("p1score").innerHTML = Game.STATE.score[0];
-  document.getElementById("p2score").innerHTML = Game.STATE.score[1];
+  // document.getElementById("p1score").innerHTML = Game.STATE.score[0];
+  // document.getElementById("p2score").innerHTML = Game.STATE.score[1];
+
+  if ((Game.STATE.frame % 60) == 0) {
+    socket.emit('update state', JSON.stringify(Game.STATE) );
+    Game.STATE.deltas = [0,0,0,0,0,0,0,0];
+  }
 
 
   Game.renderer.render(Game.stage);
