@@ -6,9 +6,11 @@
 body {
   font-family: 'Lato', sans-serif;
   text-align: center;
-  overflow: hidden;
+  /*overflow: hidden;*/
+  /*height: 100%;*/
   background: #F5F7F9;
   font-size: 16px;
+  overflow: auto;
 }
 
 .logo h1{
@@ -17,7 +19,7 @@ body {
   text-shadow: 0 5px #455;
 }
 .logo{
-  margin-bottom: 90px;
+  margin-bottom: 50px;
 }
 
 .logo h2{
@@ -53,15 +55,6 @@ a{
   display: block;
 }
 
-nav ul{
-  display: block;
-}
-
-nav ul li{
-  padding: 20px 50px;
-  margin: 20px 0;
-}
-
 .button{
   padding: 20px 100px;
   border: 1px solid #f7931e;
@@ -84,6 +77,10 @@ nav ul li{
   background-repeat: no-repeat;
   background-size: cover;
   height: 1080px;
+}
+
+.container .row img{
+  width: 350px;
 }
 
 /* Forms */
@@ -128,4 +125,5 @@ input[type=submit]{
 
 .buttons{
   width: 300px;
+  margin: 0 auto;
 }
