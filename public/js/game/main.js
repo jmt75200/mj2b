@@ -4,13 +4,15 @@ Game = {
   scoreA: new PIXI.Text('9990'),
   scoreB: new PIXI.Text('9990', {align: 'right'}),
   timerTxt: new PIXI.Text('-', {align: 'center'}),
+  gameOverTxt: new PIXI.Text('', {align: 'center'}),
   loopCounter: 0
 };
 
 Game.SETTINGS = {
   backgroundColor: 0x1099bb,
-  canvasWidth: 1100,
-  canvasHeight: 700,
+  canvasWidth: 1200,
+  canvasHeight: 800,
+  // gameLength: 123, // for testing quick games
   gameLength: 18600, // seconds * 60 fps (5m10s)
   numLanes: 5,
   numZonesPerLane: 8,
@@ -60,7 +62,7 @@ Game.init = function init(numLanes) {
 
   var mountain = PIXI.Sprite.fromImage("assets/background.png");
   mountain.anchor.set(0,0);
-  mountain.position.set(0,-80);
+  mountain.position.set(0,0);
   Game.stage.addChild(mountain);
 
   Game.stage.addChild(Game.scoreA);
@@ -68,12 +70,16 @@ Game.init = function init(numLanes) {
   Game.scoreA.anchor.set(0, 0.5);
 
   Game.stage.addChild(Game.scoreB);
-  Game.scoreB.position.set(Game.SETTINGS.canvasWidth, 50);
+  Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 50);
   Game.scoreB.anchor.set(1, 0.5);
 
   Game.stage.addChild(Game.timerTxt);
   Game.timerTxt.position.set(Game.SETTINGS.canvasWidth/2, 20);
   Game.timerTxt.anchor.set(0.5, 0.5);
+
+  Game.stage.addChild(Game.gameOverTxt);
+  Game.gameOverTxt.position.set(Game.SETTINGS.canvasWidth/2, Game.SETTINGS.canvasHeight/2);
+  Game.gameOverTxt.anchor.set(0.5, 0);
 
 
   for (var i = 0; i < numLanes; i++) {
@@ -138,7 +144,32 @@ Game.init = function init(numLanes) {
 Game.loop = function loop() {
   Game.STATE.frame++;
   Game.SETTINGS.gameLength--;
-  Game.timerTxt.text = ((Game.SETTINGS.gameLength/60)/60).toFixed(2);
+
+  if( Game.SETTINGS.gameLength <= 0 ){
+    Game.SETTINGS.gameLength = 0;
+    var status = determineWinner();
+    var winner;
+    console.log('status',status);
+    switch( status ){
+      case 0: winner = 'IT\'S A TIE';
+      break;
+      case 1: winner = 'PLAYER 1 WINS';
+      break;
+      case 2: winner = 'PLAYER 2 WINS';
+      break;
+      default: winner = 'IT\'S A TIE';
+    }
+
+    Game.timerTxt.text = winner;
+    PlayerOne.heroes.forEach( function( hero,i ){
+      hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
+      hero.sprite.position.y = Game.SETTINGS.canvasWidth + 2000;
+
+    });
+    // Game.gameOverTxt.text = winner;
+  } else {
+    Game.timerTxt.text = ((Game.SETTINGS.gameLength/60)/60).toFixed(2);
+  }
   requestAnimationFrame(Game.loop);
 
   Game.loopCounter++;
@@ -220,10 +251,23 @@ Game.loop();
 
 function freezeLane( hero ){
   if ( hero.sprite.position.x >= Game.SETTINGS.canvasWidth || hero.sprite.position.x <= 0 ){
+    hero.lock = true;
     hero.sprite.position.x = Game.SETTINGS.canvasWidth + 2000;
     hero.sprite.position.y = Game.SETTINGS.canvasWidth + 2000;
     // console.log('YOU HIT THE END');
   } else {
     // console.log('STILL OK');
+  }
+}
+
+function determineWinner(){
+  if( PlayerOne.totalScoreA === PlayerOne.totalScoreB ){
+    return 0; // Tied
+  }
+  if( PlayerOne.totalScoreA > PlayerOne.totalScoreB ){
+    return 1; // player 1 wins
+  }
+  if( PlayerOne.totalScoreB > PlayerOne.totalScoreA ){
+    return 2; // player 2 wins
   }
 }
