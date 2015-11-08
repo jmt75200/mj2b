@@ -26,12 +26,25 @@ body {
   margin-top: 0px;
 }
 
+h1, h2, h3{
+  text-transform: uppercase;
+}
+
+h1, h3{
+  color: #fbb03b;
+}
+
 h1, h2 {
   font-family: 'Roboto Slab', serif;
 }
 
-h2{
+h2, h3{
   margin-top: 15px;
+}
+
+h3{
+  margin-bottom: 18px;
+  text-align: center;
 }
 
 h2 img {
@@ -76,7 +89,8 @@ a{
   background-image: url('../assets/background0.png');
   background-repeat: no-repeat;
   background-size: cover;
-  height: 1080px;
+  height: 100%;
+  min-height: 960px;
 }
 
 .container .row img{
@@ -113,8 +127,12 @@ input[type=submit]{
 
 /* Lobby */
 .content_container{
-  width: 300px;
-  margin: 0 auto;
+  width: 320px;
+  margin: 0 auto 30px;
+  text-align: left;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 15px 40px 20px 50px;
+  border-radius: 20px;
 }
 
 .info{   
@@ -125,5 +143,9 @@ input[type=submit]{
 
 .buttons{
   width: 300px;
-  margin: 0 auto;
+  margin: 0 auto 50px;
+}
+
+.content_container ol li{
+  margin-bottom: 20px;
 }

@@ -35,6 +35,10 @@ app.get('/join', function(req, res) {
   res.render('join');
 });
 
+app.get('/howto', function(req, res) {
+  res.render('howto');
+});
+
 app.get('/lobby/:code', function(req, res) {
   req.session.accessCode = req.params.code;
   res.render('lobby', {
