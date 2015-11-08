@@ -48,6 +48,7 @@ Game.SETTINGS = {
   playerTwoLaneScores: [10, 0, 6, 0, 3, 0, 1, 0], // moving left
   // playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
   // playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
+  playerLanePoints: [10,1,6,3,3,6,1,10],
 
   numSteps: 40,
 };
@@ -91,14 +92,14 @@ Game.init = function init(numLanes) {
   Game.scoreA.position.set(50, 30);
   Game.scoreA.anchor.set(0, 0.5);
   Game.stage.addChild(Game.player1Txt);
-  Game.player1Txt.position.set(120, 30);
+  Game.player1Txt.position.set(150, 30);
   Game.player1Txt.anchor.set(0, 0.5);
 
   Game.stage.addChild(Game.scoreB);
   Game.scoreB.position.set(Game.SETTINGS.canvasWidth-50, 30);
   Game.scoreB.anchor.set(1, 0.5);
   Game.stage.addChild(Game.player2Txt);
-  Game.player2Txt.position.set(Game.SETTINGS.canvasWidth-120, 30);
+  Game.player2Txt.position.set(Game.SETTINGS.canvasWidth-150, 30);
   Game.player2Txt.anchor.set(1, 0.5);
 
   Game.stage.addChild(Game.timerTxt);

@@ -1,14 +1,23 @@
 Keys = {};
 
 Keys.SETTINGS = {
-  lane1: 65, // a
-  lane2: 83, // s
-  lane3: 68, // d
-  lane4: 70, // f
-  lane5: 74, // j
-  lane6: 75, // k
-  lane7: 76, // l
-  lane8: 186 // ;
+  lane1: 83, // s
+  lane2: 68, // d
+  lane3: 70, // f
+  lane4: 74, // j
+  lane5: 75, // k
+  lane6: 76, // l
+  lane7: 186, // ;
+  lane8: 65 // a
+  //old
+  // lane1: 65, // a
+  // lane2: 83, // s
+  // lane3: 68, // d
+  // lane4: 70, // f
+  // lane5: 74, // j
+  // lane6: 75, // k
+  // lane7: 76, // l
+  // lane8: 186 // ;
 };
 
 Keys.keyboard = function keyboard(keyCode) {
