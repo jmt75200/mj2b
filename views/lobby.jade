@@ -7,6 +7,7 @@ block content
   p Welcome&nbsp;
     span(id="playerName") #{playerName}
     | !
+  input(type="hidden", id="isHost" value="#{isHost}")
   div(id="serverMessages")
   a(href="/game/#{accessCode}", class="button radius tiny") Start Game
   br

@@ -22,7 +22,8 @@ app.get('/', function(req, res) {
 app.get('/game/:code', function(req, res) {
   res.render('game', {
     accessCode: req.session.accessCode,
-    playerName: req.session.playerName
+    playerName: req.session.playerName,
+    isHost: req.session.isHost
   });
 });
 
@@ -38,12 +39,14 @@ app.get('/lobby/:code', function(req, res) {
   req.session.accessCode = req.params.code;
   res.render('lobby', {
     accessCode: req.params.code,
-    playerName: req.session.playerName
+    playerName: req.session.playerName,
+    isHost: req.session.isHost
   });
 });
 
 app.post('/games', function(req, res) {
   req.session.playerName = req.body.playerName;
+  req.session.isHost = true;
   res.redirect('/lobby/' + generateAccessCode());
 });
 
@@ -70,14 +73,21 @@ var offsets = [0,0,0,0,0,0,0,0];
 io.on('connection', function(socket) {
   console.log('a user connected.  count: ' + (clientCount++));
 
-  socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1");
+  // socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1");
 
-  socket.on('join room', function(room, playerName) {
+  socket.on('join room', function(room, playerName, isHost) {
     socket.room = room;
     socket.playerName = playerName;
+    socket.isHost = isHost === 'true' ? true : false;
 
     socket.join(room);
-    console.log('joined room', room)
+    console.log('joined room', room + '; is host = ' + socket.isHost);
+
+    if (socket.isHost) {
+      socket.emit('set team', '1');
+    } else {
+      socket.emit('set team', '-1');
+    }
 
     var tempRoom = io.nsps['/'].adapter.rooms[room];
     var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
@@ -93,9 +103,9 @@ io.on('connection', function(socket) {
 
   socket.on('update state', function(msg, room, playerName) {
     // console.log('update state', room, playerName);
-    console.log('update state', socket.room, room, socket.room === room)
+    // console.log('update state', socket.room, room, socket.room === room)
 
-    // if (socket.room === room) { // fails to update at all with this if statement
+    // if (socket.room === room) { // does not work as intended
       data = JSON.parse(msg);
 
       // console.log(data);

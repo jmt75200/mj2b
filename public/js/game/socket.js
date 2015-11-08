@@ -1,8 +1,9 @@
 var socket = io.connect();
 var roomName = $('#accessCode').val();
 var playerName = $('#playerName').val();
+var isHost = $('#isHost').val();
 
-socket.emit('join room', roomName, playerName);
+socket.emit('join room', roomName, playerName, isHost);
 
 socket.on('room server message', function(message) {
   console.log('[room server message] ' + message);
