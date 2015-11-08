@@ -96,6 +96,10 @@ io.on('connection', function(socket) {
     socket.broadcast.to(room).emit('room server message', playerName + ' joined the room');
   });
 
+  socket.on('start game', function(room) {
+    socket.broadcast.to(room).emit('game started', room);
+  });
+
   socket.on('disconnect', function() {
     console.log('user', socket.playerName, 'disconnected from room', socket.room);
     socket.leave(socket.room);

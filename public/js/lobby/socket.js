@@ -10,3 +10,11 @@ socket.on('room server message', function(message) {
 
   $('#serverMessages').append('<p>' + message + '</p>');
 });
+
+socket.on('game started', function(room) {
+  window.location.href = '/game/' + room;
+});
+
+$('#startGame').click(function(evt) {
+  socket.emit('start game', roomName);
+});
