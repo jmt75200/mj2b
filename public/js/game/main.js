@@ -13,7 +13,7 @@ Game.SETTINGS = {
   canvasWidth: 1200,
   canvasHeight: 800,
   // gameLength: 123, // for testing quick games
-  gameLength: 18600, // seconds * 60 fps (5m10s)
+  gameLength: 18300, // seconds * 60 fps (5m5s)
   numLanes: 5,
   numZonesPerLane: 8,
   playerOneZoneColor: 0xEDEFF5,
@@ -112,7 +112,7 @@ Game.init = function init(numLanes) {
     switch( i ){
       case 0: heroImage = 'assets/heroes/airship.png';
       break;
-      case 1: heroImage = 'assets/heroes/test.png';
+      case 1: heroImage = 'assets/heroes/snailhouse.png';
       break;
       case 2: heroImage = 'assets/heroes/wizzard.png';
       break;
@@ -149,7 +149,7 @@ Game.loop = function loop() {
     Game.SETTINGS.gameLength = 0;
     var status = determineWinner();
     var winner;
-    console.log('status',status);
+    // console.log('status',status);
     switch( status ){
       case 0: winner = 'IT\'S A TIE';
       break;
@@ -174,6 +174,8 @@ Game.loop = function loop() {
 
   Game.loopCounter++;
 
+  checkLaneStatus(PlayerOne.heroes);
+
   PlayerOne.heroes.forEach(function(hero, i) {
     if (Game.loopCounter === Game.SETTINGS.improveStaminaCounter) {
       hero.stamina -= Game.SETTINGS.improveStaminaAmount;
@@ -189,7 +191,7 @@ Game.loop = function loop() {
     if (hero.sprite.position.x < 0) {
       hero.sprite.position.x = 0;
     }
-
+    // console.log('hero.lock',hero);
     freezeLane(hero);
 
     // score the current lane
@@ -197,7 +199,7 @@ Game.loop = function loop() {
     var now = Date.now();
 
     // on the next frame, if hero is still in the same zone, check the time spent in the zone
-    if (hero.currentZone === zone && hero.currentZone === hero.previousZone) {
+    if (hero.currentZone === zone && hero.currentZone === hero.previousZone && hero.lock !== true) {
       var timeSpentInZone = now - hero.currentZoneTimeLastPolled;
 
       if (timeSpentInZone >= 3000) { // 3000 ms = 3 s
@@ -234,7 +236,7 @@ Game.loop = function loop() {
   // Game.scoreB.text = Game.STATE.score[1];
 
 
-  if ((Game.STATE.frame % 60) == 0) {
+  if ((Game.STATE.frame % 60) === 0) {
     socket.emit('update state', JSON.stringify(Game.STATE) );
     Game.STATE.deltas = [0,0,0,0,0,0,0,0];
   }
@@ -269,5 +271,12 @@ function determineWinner(){
   }
   if( PlayerOne.totalScoreB > PlayerOne.totalScoreA ){
     return 2; // player 2 wins
+  }
+}
+
+function checkLaneStatus(heroes){
+  // soooooooo ugly
+  if(heroes[0].lock === true && heroes[1].lock === true && heroes[2].lock === true && heroes[3].lock === true && heroes[4].lock === true ){
+    Game.SETTINGS.gameLength = 0;
   }
 }

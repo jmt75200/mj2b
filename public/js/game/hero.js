@@ -1,5 +1,6 @@
 function Hero(sprite) {
   this.sprite = sprite;
+  this.lock = false;
   this.currentZone = -1;
   this.currentZoneTimeLastPolled = null;
   this.previousZone = -1;
