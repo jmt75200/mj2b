@@ -17,7 +17,7 @@ Game.SETTINGS = {
   botMode: true,
   staminaThreshold: 100,
   improveStaminaCounter: 60, // decrease stamina once per second
-  improveStaminaAmount: 15, // decrease stamina by 15
+  improveStaminaAmount: 10, // decrease stamina by 10
   // scores for each zone, index 0 to 7
   playerOneLaneScores: [-10, 1, -6, 3, -3, 6, -1, 10], // moving right
   playerTwoLaneScores: [10, -1, 6, -3, 3, -6, 1, -10] // moving left
