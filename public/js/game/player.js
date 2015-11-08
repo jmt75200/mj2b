@@ -1,4 +1,5 @@
 PlayerOne = {
   lanes: [],
-  heroes: []
+  heroes: [],
+  totalScore: 0
 };
