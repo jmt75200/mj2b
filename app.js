@@ -19,8 +19,11 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
-app.get('/game', function(req, res) {
-  res.render('game');
+app.get('/game/:code', function(req, res) {
+  res.render('game', {
+    accessCode: req.session.accessCode,
+    playerName: req.session.playerName
+  });
 });
 
 app.get('/host', function(req, res) {
@@ -32,6 +35,7 @@ app.get('/join', function(req, res) {
 });
 
 app.get('/lobby/:code', function(req, res) {
+  req.session.accessCode = req.params.code;
   res.render('lobby', {
     accessCode: req.params.code,
     playerName: req.session.playerName

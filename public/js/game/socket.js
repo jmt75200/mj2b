@@ -1,7 +1,8 @@
-// var socket = io();
 var socket = io.connect();
-console.log('access code', document.getElementById('accessCode').value)
-socket.emit('join room', 'room1', 'some name');
+var roomName = $('#accessCode').val();
+var playerName = $('#playerName').val();
+
+socket.emit('join room', roomName, playerName);
 
 // if (window.location.hostname == 'localhost')
 //   socket = io(window.location.hostname + ':3000')
@@ -11,7 +12,7 @@ socket.emit('join room', 'room1', 'some name');
 // var socket = io(window.location.hostname);
 
 socket.on('room server message', function(message) {
-  console.log('client received room server message: ' + message);
+  console.log('[room server message] ' + message);
 });
 
 socket.on('game update', function(msg){

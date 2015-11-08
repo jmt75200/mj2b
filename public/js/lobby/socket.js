@@ -5,7 +5,7 @@ var playerName = $('#playerName').text();
 socket.emit('join room', roomName, playerName);
 
 socket.on('room server message', function(message) {
-  console.log('client received room server message: ' + message);
+  console.log('[room server message] ' + message);
 
-  $('#stuff').append('<p>' + message + '</p>');
+  $('#serverMessages').append('<p>' + message + '</p>');
 });
