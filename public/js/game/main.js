@@ -3,6 +3,7 @@ Game = {
   zones: {},
   scoreA: new PIXI.Text('9990'),
   scoreB: new PIXI.Text('9990', {align: 'right'}),
+  timerTxt: new PIXI.Text('-', {align: 'center'}),
   loopCounter: 0
 };
 
@@ -10,6 +11,7 @@ Game.SETTINGS = {
   backgroundColor: 0x1099bb,
   canvasWidth: 1100,
   canvasHeight: 700,
+  gameLength: 18600, // seconds * 60 fps (5m10s)
   numLanes: 5,
   numZonesPerLane: 8,
   playerOneZoneColor: 0xEDEFF5,
@@ -27,7 +29,7 @@ Game.SETTINGS = {
 
 Game.VIEWPORT = {
   sizePerStep: 1,
-}
+};
 
 Game.STATE = new GameState();
 
@@ -62,9 +64,14 @@ Game.init = function init(numLanes) {
   Game.stage.addChild(Game.scoreA);
   Game.scoreA.position.set(50, 50);
   Game.scoreA.anchor.set(0, 0.5);
+
   Game.stage.addChild(Game.scoreB);
   Game.scoreB.position.set(Game.SETTINGS.canvasWidth, 50);
   Game.scoreB.anchor.set(1, 0.5);
+
+  Game.stage.addChild(Game.timerTxt);
+  Game.timerTxt.position.set(Game.SETTINGS.canvasWidth/2, 20);
+  Game.timerTxt.anchor.set(0.5, 0.5);
 
 
   for (var i = 0; i < numLanes; i++) {
@@ -95,7 +102,7 @@ Game.init = function init(numLanes) {
 
     var heroImage;
     switch( i ){
-      case 0: heroImage = 'assets/heroes/gunner.png';
+      case 0: heroImage = 'assets/heroes/airship.png';
       break;
       case 1: heroImage = 'assets/heroes/test.png';
       break;
@@ -128,7 +135,8 @@ Game.init = function init(numLanes) {
 
 Game.loop = function loop() {
   Game.STATE.frame++;
-
+  Game.SETTINGS.gameLength--;
+  Game.timerTxt.text = ((Game.SETTINGS.gameLength/60)/60).toFixed(2);
   requestAnimationFrame(Game.loop);
 
   Game.loopCounter++;
