@@ -74,7 +74,7 @@ io.on('connection', function(socket) {
 
   socket.emit('set team', (clientCount % 2) == 1 ? "1" : "-1"  )
 
-  socket.on('join room', function(room) {
+  socket.on('join room', function(room, playerName) {
     socket.join(room);
     console.log('joined room', room)
 
@@ -82,7 +82,7 @@ io.on('connection', function(socket) {
     var totalClientsConnected = tempRoom ? Object.keys(tempRoom).length : 0;
     console.log('total clients in room ' + room + ': ' + totalClientsConnected);
 
-    io.sockets.in(room).emit('room server message', 'Welcome to room ' + room);
+    io.sockets.in(room).emit('room server message', playerName + ' joined the room');
   });
 
   socket.on('disconnect', function() {

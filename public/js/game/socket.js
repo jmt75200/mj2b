@@ -1,7 +1,7 @@
 // var socket = io();
 var socket = io.connect();
 console.log('access code', document.getElementById('accessCode').value)
-socket.emit('join room', 'room1');
+socket.emit('join room', 'room1', 'some name');
 
 // if (window.location.hostname == 'localhost')
 //   socket = io(window.location.hostname + ':3000')
