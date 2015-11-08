@@ -1,10 +1,17 @@
+var styles = {
+  font: '16px Lato',
+  align: 'center',
+  stroke: '#FFFFFF',
+  strokeThickness: '3'
+
+};
 Game = {
   stage: new PIXI.Container(),
   zones: {},
   scoreA: new PIXI.Text('9990'),
-  scoreB: new PIXI.Text('9990', {align: 'right'}),
-  timerTxt: new PIXI.Text('-', {align: 'center'}),
-  gameOverTxt: new PIXI.Text('', {align: 'center'}),
+  scoreB: new PIXI.Text('9990', styles),
+  timerTxt: new PIXI.Text('-', styles),
+  gameOverTxt: new PIXI.Text('', styles),
   loopCounter: 0
 };
 
